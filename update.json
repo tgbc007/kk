@@ -1,0 +1,5 @@
+{
+    "latestVersion": "1.0.1", // 最新版本（更新时需大于旧版本）
+    "updateUrl": "https://wyw1.netlify.app", // 你的Netlify站点地址
+    "updateLog": "1. 新增自动更新功能；2. 优化播放器加载速度；3. 修复列表显示bug" // 更新内容
+}
