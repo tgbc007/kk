@@ -8,51 +8,51 @@
     <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.14/dist/hls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <style>
+    <样式>
         /* 样式部分与原代码一致，无需修改 */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .ad-slot { 
-            width: 100%; 
-            height: 100px; 
-            line-height: 100px; 
-            text-align: center; 
-            border: 2px dashed #ff6700; 
-            color: #ff6700; 
-            font-size: 18px; 
-            margin-bottom: 20px; 
-            background: #fff8f0;
+        * { 边距: 0; 内边距: 0; 盒模型: 边框盒; }
+        body { 字体: Arial, 无衬线字体; 内边距: 20像素; }
+        .广告位 { 
+            宽度：100%；
+            高度：100像素；
+            行高：100像素；
+            文本对齐：居中；
+            边框：2px 虚线 #ff6700; 
+            颜色: #ff6700; 
+            字体大小：18像素；
+            下边距：20像素；
+            背景: #fff8f0;
         }
-        .player-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            aspect-ratio: 16/9; 
-            background: #ccc; 
-            opacity: 0.5; 
-            pointer-events: none; 
+        .播放器容器 { 
+            位置：相对；
+            宽度：100%；
+            最大宽度：1200像素；
+            
+            
+            背景: #ccc; ccc; 
+            
+            指针事件：无；
         }
         .video-js .vjs-download-control { display: none !important; }
-        .btn-group { 
-            max-width: 1200px; 
-            margin: 15px auto; 
-            display: flex; 
-            gap: 15px; 
+        .按钮组 { 
+            最大宽度：1200像素；
+            边距：15像素 自动；
+            显示：弹性；
+            间隙：15像素；
         }
-        .next-btn, .group-btn { 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: not-allowed; 
-            font-size: 16px; 
-            background: #999; 
-            color: #fff; 
-            opacity: 0.7; 
-            pointer-events: none; 
+        .下一个按钮, .组按钮 { 
+             
+            边框：无；
+            边框半径：4像素；
+            光标：禁止；
+            字体大小：16像素；
+            背景: #999; 
+            颜色: #fff; 
+            不透明度：0.7；
+            指针事件：无；
         }
-        .video-list { 
-            max-width: 1200px; 
+        .视频列表 { 
+            最大宽度：1200像素；
             margin: 20px auto; 
             border: 1px solid #eee; 
             border-radius: 4px; 
@@ -79,7 +79,7 @@
             color: #666; 
             max-width: 1200px; 
             margin: 0 auto; 
-            display: none;
+            显示：无;
         }
         .force-update-modal {
             position: fixed; 
@@ -382,18 +382,6 @@
             playVideo(nextIndex);
         }
 
-        // 版本对比工具（不变）
-        function compareVersion(a, b) {
-            const aArr = a.split('.').map(Number);
-            const bArr = b.split('.').map(Number);
-            const maxLen = Math.max(aArr.length, bArr.length);
-            for (let i = 0; i < maxLen; i++) {
-                const aVal = aArr[i] || 0;
-                const bVal = bArr[i] || 0;
-                if (aVal !== bVal) return aVal - bVal;
-            }
-            return 0;
-        }
 
         // 监听SW消息（不变）
         navigator.serviceWorker.addEventListener('message', (event) => {
