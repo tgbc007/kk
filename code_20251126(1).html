@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长视频播放网页版（无短视频）</title>
+    <!-- 引入依赖CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.14/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.css">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: "PingFang SC", "Microsoft Yahei", sans-serif;
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+        body { 
+            color: #f5f5f5;
+            position: relative;
+        }
+        .pc-vertical-container {
+            width: 100%;
+            height: 100%;
+        }
+        .app-wrapper {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            overflow: hidden;
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .pc-vertical-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100vw;
+                height: 100vh;
+            }
+            .app-wrapper {
+                width: min(100vh * 9 / 16, 600px);
+                height: min(100vw * 16 / 9, 1067px);
+                aspect-ratio: 9/16 !important;
+                position: relative;
+            }
+            .bottom-banner-ad {
+                position: absolute !important;
+                bottom: 70px !important;
+                left: 0 !important;
+                width: 100% !important;
+                padding-bottom: 0 !important;
+            }
+            .floatAd {
+                position: absolute !important;
+                top: 20% !important;
+                right: 15px !important;
+                width: 50px !important;
+            }
+            .next-btn-container {
+                position: absolute !important;
+                bottom: 20px !important;
+                left: 0 !important;
+                width: 100% !important;
+                padding: 0 !important;
+            }
+            .func-btn.next.full-width {
+                width: calc(100% - 40px) !important;
+                margin: 0 auto !important;
+            }
+        }
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding-bottom: calc(12.5% + env(safe-area-inset-bottom) + 8px);
+        }
+        .notice-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.85);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .notice-container {
+            width: 90%;
+            max-width: 500px;
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 0 30px rgba(22, 93, 255, 0.3);
+            border: 1px solid rgba(22, 93, 255, 0.2);
+        }
+        .notice-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #165DFF;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .notice-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f5f5f5;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        .notice-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+        .notice-countdown {
+            font-size: 13px;
+            color: #999;
+        }
+        .notice-close-btn {
+            padding: 8px 20px;
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .notice-close-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+        .adSwipebox {
+            width: calc(100% - 20px);
+            margin: 10px auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            aspect-ratio: 16/5 !important;
+            flex-shrink: 0 !important;
+            position: relative;
+            background: #000;
+        }
+        .adSwipebox .swiper-container, 
+        .adSwipebox .swiper-wrapper, 
+        .adSwipebox .swiper-slide {
+            width: 100% !important;
+            height: 100% !important;
+            flex-shrink: 0 !important;
+        }
+        .adSwipebox .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .adSwipebox img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: fill !important;
+        }
+        .bottom-banner-ad {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            padding-top: 12.5%;
+            height: auto !important;
+            background: #000;
+            z-index: 99990;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.6);
+            overflow: hidden !important;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .bottom-banner-ad a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .bottom-banner-ad img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .banner-close-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px !important;
+            height: 20px !important;
+            background: transparent !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.5) !important;
+            border-radius: 50%;
+            font-size: 12px !important;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            z-index: 99991 !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+        }
+        .splash-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .splash-ad img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill !important;
+        }
+        .splash-ad-skip {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.7);
+            color: #999;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .splash-ad-skip.enabled {
+            color: #fff;
+            cursor: pointer;
+            pointer-events: auto;
+            background: rgba(0,0,0,0.9);
+        }
+        .interstitial-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 99997;
+            display: none;
+            pointer-events: auto;
+        }
+        .interstitial-ad {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: transparent;
+            border-radius: 12px;
+            border: none;
+            z-index: 99998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 0 25px rgba(255, 77, 77, 0.4);
+            aspect-ratio: 3/4;
+            overflow: visible !important;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .interstitial-ad.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .interstitial-ad img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill !important;
+            border-radius: 10px;
+        }
+        .interstitial-ad-close {
+            position: absolute;
+            bottom: -35px !important;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 36px;
+            height: 36px;
+            background: #FF4D4D;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            z-index: 99999 !important;
+        }
+        .floatAd {
+            position: fixed;
+            top: 160px;
+            right: 10px;
+            z-index: 9999;
+            width: 75px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            background: #000;
+            pointer-events: auto !important;
+        }
+        .floatAd img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill !important;
+            display: block;
+        }
+        .floatAd .fontDiv {
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            color: #ff0000;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .floatAd-close {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 18px !important;
+            height: 18px !important;
+            background: transparent !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.6) !important;
+            border-radius: 50%;
+            font-size: 12px !important;
+            line-height: 18px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 10000 !important;
+        }
+        .preAdContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #adImage {
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            object-fit: fill !important;
+            display: block;
+        }
+        .adControlBar {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            z-index: 10000;
+        }
+        .adSkipBtn {
+            padding: 6px 16px;
+            font-size: 14px;
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .player-area {
+            width: auto !important;
+            height: 24vh !important;
+            aspect-ratio: 16/9 !important;
+            margin: 0 auto !important;
+            background: #000;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid #222;
+            z-index: 999;
+        }
+        #player {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            controlsList: nodownload noremoteplayback !important;
+            -webkit-controlsList: nodownload noremoteplayback !important;
+        }
+        #player::-webkit-media-controls-download-button {
+            display: none !important;
+        }
+        #player::-webkit-media-controls {
+            overflow: hidden !important;
+        }
+        .core-control-bar {
+            padding: 6px 14px;
+            background: linear-gradient(90deg, #1e293b 0%, #1a1a1a 100%);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: space-around;
+            margin: 6px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        .func-btn.group {
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+            border: none;
+            flex: 1;
+            text-align: center;
+            background: linear-gradient(90deg, #FF7D00 0%, #E06A00 100%);
+            color: #fff;
+            box-shadow: 0 3px 8px rgba(255, 125, 0, 0.2);
+        }
+        .func-btn.current-play {
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            box-shadow: 0 3px 8px rgba(22, 93, 255, 0.2);
+        }
+        .playlist-wrap {
+            flex-grow: 1;
+            width: calc(100% - 20px);
+            margin: 0 10px;
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            overflow-y: auto;
+        }
+        .playlist-wrap.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #2d2d2d;
+        }
+        .playlist-title { 
+            font-size: 16px;
+            font-weight: 600;
+            color: #f5f5f5;
+        }
+        .playlist-count { 
+            font-size: 12px;
+            color: #999;
+        }
+        .playlist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            background: #252525;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+        .playlist-item:hover {
+            background: #2d2d2d;
+            transform: translateX(4px);
+        }
+        .playlist-item .item-index {
+            margin-right: 12px;
+            color: #888;
+            min-width: 22px;
+            font-size: 13px;
+            padding-top: 1px;
+        }
+        .playlist-item .item-name {
+            flex: 1;
+            color: #f5f5f5;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .playlist-item .item-date {
+            color: #FF4D4D;
+            font-size: 12px;
+            margin-left: 10px;
+            white-space: nowrap;
+            padding-top: 1px;
+            align-self: flex-start;
+        }
+        .playlist-item.item-active {
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            color: #fff;
+        }
+        .pagination {
+            padding: 6px 12px;
+            background: #1e1e1e;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        .page-input {
+            width: 45px;
+            padding: 5px;
+            border: 1px solid #333;
+            background: #252525;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .page-btn {
+            padding: 5px 12px;
+            border: none;
+            background: #252525;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .next-btn-container {
+            position: fixed;
+            bottom: env(safe-area-inset-bottom);
+            left: 0;
+            width: 100%;
+            padding: 2px 10px 8px;
+            z-index: 99980;
+        }
+        .func-btn.next.full-width {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(22, 93, 255, 0.3);
+        }
+        .loading, .error { 
+            color: #999;
+            padding: 15px;
+            font-size: 13px;
+            text-align: center;
+            background: #252525;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .error { color: #FF4D4D; }
+        .retry-btn {
+            margin-left: 8px;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            background: #165DFF;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="notice-mask" id="noticeMask" style="display: none;">
+        <div class="notice-container">
+            <div class="notice-title" id="noticeTitle">系统公告</div>
+            <div class="notice-content" id="noticeContent">欢迎使用长视频播放网页版，无短视频内容</div>
+            <div class="notice-footer">
+                <span class="notice-countdown" id="noticeCountdown">2秒后可关闭</span>
+                <button class="notice-close-btn" id="noticeCloseBtn" disabled>关闭</button>
+            </div>
+        </div>
+    </div>
+    <div class="pc-vertical-container">
+        <div class="app-wrapper">
+            <div class="bottom-banner-ad" id="bottomBannerAd">
+                <button class="banner-close-btn" id="bannerCloseBtn">×</button>
+            </div>
+            <div class="app-container">
+                <div class="splash-ad" id="splashAd"></div>
+                <div class="interstitial-mask" id="interstitialMask"></div>
+                <div class="adSwipebox">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper" id="bannerSwiperWrapper"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+                <div class="player-area">
+                    <video id="player" controls playsinline webkit-playsinline>
+                        您的浏览器不支持视频播放
+                    </video>
+                    <div class="preAdContainer" id="preAdContainer">
+                        <a id="adLink" href="#" target="_blank">
+                            <img id="adImage" alt="贴片广告">
+                        </a>
+                        <div class="adControlBar" id="adControlBar">
+                            <button class="adSkipBtn" id="adSkipBtn" disabled>5s后进入</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="core-control-bar">
+                    <button class="func-btn group current-play" id="currentPlayBtn">正在播放</button>
+                    <button class="func-btn group" id="shareBtn">分享给QQ好友</button>
+                    <a href="https://qun.qq.com/universal-share/share?ac=1&authKey=bH%2B1KyzX4WfhLWw1DijY0fE4UkVhnwegk1RB9LxR%2FqfVVvV6dWOqBO0CAjZiLAId&busi_data=eyJncm91cENvZGUiOiI3MzMzMTQ3NjQiLCJ0b2tlbiI6ImFIYjdMcDhsdnlqSEc4NjRIMmZ3SDIvZkc0S2dSenRnWXFVbFVzM01HQmwwT25TY3IyK1pRMVN1N21FNzFib20iLCJ1aW4iOiIxNzk1ODUyNTU5In0%3D&data=urNE9WigmXAvr-uFjHCIN7gLzULuz2itgIkc0Bxt07ytjRpFVb1nwiH7miG-PFobwd2AWThYePcOpnQq79PS9w&svctype=4&tempid=h5_group_info" target="_blank" class="func-btn group">加群获取资源</a>
+                 </div>
+                <div class="playlist-wrap" id="playlistWrap">
+                    <div class="playlist-header">
+                        <div class="playlist-title">长视频播放列表</div>
+                        <div class="playlist-count" id="playlistCount">共 0 个视频</div>
+                    </div>
+                    <div id="playlistContainer"></div>
+                </div>
+                <div class="pagination" id="pagination">
+                    <button class="page-btn" id="prevPage">上一页</button>
+                    <button class="page-btn" id="nextPage">下一页</button>
+                    <span style="font-size: 13px; color: #999;">页码：</span>
+                    <input type="number" class="page-input" id="pageInput" min="1" value="1">
+                    <button class="page-btn" id="jumpPage">跳转</button>
+                </div>
+            </div>
+            <div class="next-btn-container">
+                <button class="func-btn next full-width" id="nextBtn">下一个视频</button>
+            </div>
+            <div class="floatAd" id="floatAd">
+                <button class="floatAd-close" id="floatAdClose">×</button>
+                <a href="https://example.com/floatAd" target="_blank">
+                    <img src="https://picsum.photos/70/110?random=4" alt="悬浮广告">
+                </a>
+                <div class="fontDiv">限时福利</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const App = {
+            config: {
+                // 仅保留长视频列表地址，已删除短视频相关配置
+                TXT_URL_LONG: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://hk.gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist.txt"),
+                PAGE_SIZE: 10,
+                currentPage: 1,
+                videoList: [],
+                currentPlayIndex: 0,
+                isLoading: false,
+                hls: null,
+                currentInterstitial: 0,
+                isInterstitialShowing: false,
+                adPlayCount: 0,
+                preAdPlaying: false,
+                GITEE_AD_CONFIG_URL: "https://gitee.com/t-bg/kk/raw/master/ads.json",
+                GITEE_SHARE_URL: "https://gitee.com/t-bg/kk/raw/master/fenxiang.txt",
+                shareContent: "推荐一个超好用的长视频播放网页版，快来看看吧！",
+                // 🔥 关键配置：填写当前网页的在线访问地址（必须部署后替换，否则转发链接无效）
+                WEB_PAGE_URL: "https://your-deploy-url.com", // 示例：https://video-player-demo.netlify.app
+                notice: {
+                    enable: true,
+                    title: "系统公告",
+                    content: "欢迎使用长视频播放网页版，已移除短视频内容，仅保留长视频资源"
+                },
+                preAdImageSources: [ 
+                    "https://picsum.photos/1080/1920?random=100",
+                    "https://picsum.photos/1080/1920?random=101"
+                ],
+                preAdLinkUrls: [
+                    "https://www.baidu.com",
+                    "https://www.baidu.com"
+                ],
+                preAdSkipTime: 5,
+                bannerAds: [ 
+                    { "imgUrl": "https://picsum.photos/800/250?random=1", "linkUrl": "https://example.com/banner1" },
+                    { "imgUrl": "https://picsum.photos/800/250?random=2", "linkUrl": "https://example.com/banner2" }
+                ],
+                sponsorAd: { 
+                    imgUrl: "https://picsum.photos/750/1334?random=10",
+                    linkUrl: "https://example.com/sponsor",
+                    skipTime: 5
+                },
+                interstitialAds: [ 
+                    { "imgUrl": "https://picsum.photos/300/400?random=21", "linkUrl": "https://example.com/inter1" },
+                    { "imgUrl": "https://picsum.photos/300/400?random=22", "linkUrl": "https://example.com/inter2" }
+                ],
+                bottomBannerAd: { 
+                    imgUrl: "https://picsum.photos/1050/131.25?random=5",
+                    linkUrl: "https://example.com/bottom"
+                },
+                floatAd: { 
+                    imgUrl: "https://picsum.photos/75/112?random=4",
+                    linkUrl: "https://example.com/floatAd",
+                    text: "限时福利"
+                }
+            },
+            els: {
+                player: document.getElementById("player"),
+                playlistContainer: document.getElementById("playlistContainer"),
+                playlistCount: document.getElementById("playlistCount"),
+                playlistWrap: document.getElementById("playlistWrap"),
+                nextBtn: document.getElementById("nextBtn"),
+                prevPageBtn: document.getElementById("prevPage"),
+                nextPageBtn: document.getElementById("nextPage"),
+                pageInput: document.getElementById("pageInput"),
+                jumpPageBtn: document.getElementById("jumpPage"),
+                currentPlayBtn: document.getElementById("currentPlayBtn"),
+                shareBtn: document.getElementById("shareBtn"),
+                interstitialMask: document.getElementById("interstitialMask"),
+                interstitialAds: [], 
+                adImage: document.getElementById("adImage"),
+                adLink: document.getElementById("adLink"),
+                preAdContainer: document.getElementById("preAdContainer"),
+                adSkipBtn: document.getElementById("adSkipBtn"),
+                floatAdClose: document.getElementById("floatAdClose"),
+                bannerSwiperWrapper: document.getElementById("bannerSwiperWrapper"),
+                splashAd: document.getElementById("splashAd"),
+                bottomBannerAd: document.getElementById("bottomBannerAd"),
+                floatAd: document.getElementById("floatAd"),
+                bannerCloseBtn: document.getElementById("bannerCloseBtn"),
+                noticeMask: document.getElementById("noticeMask"),
+                noticeTitle: document.getElementById("noticeTitle"),
+                noticeContent: document.getElementById("noticeContent"),
+                noticeCountdown: document.getElementById("noticeCountdown"),
+                noticeCloseBtn: document.getElementById("noticeCloseBtn")
+            },
+            init() {
+                this.bindEvents();
+                this.loadAdConfigFromGitee();
+                this.loadShareContent(); // 优先加载Gitee的fenxiang.txt
+                this.loadPlaylist(); // 固定加载长视频列表，无短视频切换逻辑
+                this.initPaginationDisabled();
+                this.watchSplashClose();
+                this.els.player.pause();
+                this.els.player.src = "";
+            },
+            watchSplashClose() {
+                const splashAd = this.els.splashAd;
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach(mutation => {
+                        if (splashAd.style.display === "none") {
+                            observer.disconnect();
+                            this.handleNoticeAndInterstitial();
+                        }
+                    });
+                });
+                observer.observe(splashAd, { attributes: true, attributeFilter: ['style'] });
+            },
+            handleNoticeAndInterstitial() {
+                const checkConfig = setInterval(() => {
+                    if (this.config.adConfigLoaded) {
+                        clearInterval(checkConfig);
+                        const { enable, title, content } = this.config.notice;
+                        if (enable) {
+                            this.els.noticeTitle.textContent = title || "系统公告";
+                            this.els.noticeContent.textContent = content || "暂无公告内容";
+                            this.els.noticeMask.style.display = "flex";
+                            this.startNoticeCountdown();
+                        } else {
+                            this.showInterstitial(1);
+                        }
+                    }
+                }, 100);
+                setTimeout(() => clearInterval(checkConfig), 3000);
+            },
+            startNoticeCountdown() {
+                let countdown = 2;
+                const timer = setInterval(() => {
+                    countdown--;
+                    this.els.noticeCountdown.textContent = `${countdown}秒后可关闭`;
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        this.els.noticeCountdown.textContent = "可关闭";
+                        this.els.noticeCloseBtn.disabled = false;
+                    }
+                }, 1000);
+            },
+            loadAdConfigFromGitee() {
+                const proxyUrl = "https://allorigins.hexlet.app/get?url=" + encodeURIComponent(this.config.GITEE_AD_CONFIG_URL);
+                fetch(proxyUrl)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP错误：${res.status}`);
+                        return res.json();
+                    })
+                    .then(proxyData => {
+                        let adData = JSON.parse(proxyData.contents);
+                        if (Array.isArray(adData.preAdImageSources)) this.config.preAdImageSources = adData.preAdImageSources;
+                        if (Array.isArray(adData.preAdLinkUrls)) this.config.preAdLinkUrls = adData.preAdLinkUrls;
+                        if (typeof adData.preAdSkipTime === 'number' && adData.preAdSkipTime > 0) this.config.preAdSkipTime = adData.preAdSkipTime;
+                        if (Array.isArray(adData.bannerAds)) this.config.bannerAds = adData.bannerAds;
+                        if (adData.sponsorAd?.imgUrl) this.config.sponsorAd = adData.sponsorAd;
+                        if (Array.isArray(adData.interstitialAds)) this.config.interstitialAds = adData.interstitialAds;
+                        if (adData.bottomBannerAd?.imgUrl) this.config.bottomBannerAd = adData.bottomBannerAd;
+                        if (adData.floatAd?.imgUrl) this.config.floatAd = adData.floatAd;
+                        if (adData.notice) this.config.notice = { ...this.config.notice, ...adData.notice };
+                    })
+                    .catch(err => console.error("❌ ads.json加载失败：", err.message))
+                    .finally(() => {
+                        this.config.adConfigLoaded = true;
+                        this.renderSponsorAd();
+                        this.renderInterstitialAds();
+                        this.renderBottomBannerAd();
+                        this.initAds();
+                        this.renderFloatAd();
+                    });
+            },
+            // 加载Gitee的fenxiang.txt作为转发内容
+            loadShareContent() {
+                const proxyUrl = "https://allorigins.hexlet.app/get?url=" + encodeURIComponent(this.config.GITEE_SHARE_URL);
+                fetch(proxyUrl)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`分享内容请求失败：${res.status}`);
+                        return res.json();
+                    })
+                    .then(proxyData => {
+                        const shareText = proxyData.contents.trim();
+                        // 若fenxiang.txt有内容，替换默认转发文案
+                        if (shareText) this.config.shareContent = shareText;
+                    })
+                    .catch(err => {
+                        console.error("❌ fenxiang.txt加载失败，使用默认转发文案：", err.message);
+                    });
+            },
+            // 🔥 核心优化：QQ转发协议（唤起转发界面，而非聊天窗口）
+            shareToQQ() {
+                // 1. 编码转发内容（fenxiang.txt加载的文本）
+                const shareTitle = encodeURIComponent(this.config.shareContent);
+                // 2. 编码网页链接（必须是部署后的在线地址，Base64编码）
+                const webUrl = btoa(encodeURIComponent(this.config.WEB_PAGE_URL));
+                // 3. QQ转发专属Scheme（兼容iOS/Android）
+                const qqShareUrl = `mqqapi://forward/url?plg_type=2&plg_auth=1&msg_type=text&plg_nld=1&plg_usr=1&url_prefix=${webUrl}&title=${shareTitle}`;
+                // 唤起QQ转发界面
+                window.location.href = qqShareUrl;
+            },
+            scrollToCurrentPlay() {
+                if (!this.config.videoList.length) return;
+                const currentIndex = this.config.currentPlayIndex;
+                const targetPage = Math.ceil((currentIndex + 1) / this.config.PAGE_SIZE);
+                if (targetPage !== this.config.currentPage) {
+                    this.config.currentPage = targetPage;
+                    this.renderPlaylist();
+                    this.initPaginationDisabled();
+                }
+                setTimeout(() => {
+                    const activeItem = document.querySelector(".playlist-item.item-active");
+                    if (activeItem) activeItem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                }, 100);
+            },
+            renderSponsorAd() {
+                const { imgUrl, linkUrl, skipTime = 5 } = this.config.sponsorAd;
+                const a = document.createElement("a");
+                a.href = linkUrl || "#";
+                a.target = "_blank";
+                const img = document.createElement("img");
+                img.src = imgUrl || "https://picsum.photos/750/1334?random=fallback";
+                img.alt = "开屏广告";
+                a.appendChild(img);
+                const skipBtn = document.createElement("button");
+                skipBtn.className = "splash-ad-skip";
+                skipBtn.id = "splashAdSkip";
+                skipBtn.textContent = `${skipTime}秒后可进入`;
+                this.els.splashAd.innerHTML = "";
+                this.els.splashAd.appendChild(a);
+                this.els.splashAd.appendChild(skipBtn);
+                this.initSplashAd(skipTime);
+            },
+            initSplashAd(skipTime = 5) {
+                const splashAdSkip = document.getElementById("splashAdSkip");
+                let countdown = skipTime;
+                const timer = setInterval(() => {
+                    countdown--;
+                    splashAdSkip.textContent = `${countdown}秒后可进入`;
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        splashAdSkip.classList.add('enabled');
+                        splashAdSkip.textContent = "点击进入";
+                    }
+                }, 1000);
+                splashAdSkip.onclick = () => {
+                    if (splashAdSkip.classList.contains('enabled')) this.els.splashAd.style.display = "none";
+                };
+            },
+            renderInterstitialAds() {
+                document.querySelectorAll(".interstitial-ad").forEach(el => el.remove());
+                this.config.interstitialAds.forEach((ad, idx) => {
+                    if (!ad.imgUrl) return;
+                    const interAd = document.createElement("div");
+                    interAd.className = "interstitial-ad";
+                    interAd.id = `interstitialAd${idx+1}`;
+                    const a = document.createElement("a");
+                    a.href = ad.linkUrl || "#";
+                    a.target = "_blank";
+                    const img = document.createElement("img");
+                    img.src = ad.imgUrl;
+                    img.alt = `插屏广告${idx+1}`;
+                    a.appendChild(img);
+                    const closeBtn = document.createElement("button");
+                    closeBtn.className = "interstitial-ad-close";
+                    closeBtn.dataset.next = idx + 1 < this.config.interstitialAds.length ? idx + 2 : 0;
+                    closeBtn.textContent = "×";
+                    interAd.appendChild(a);
+                    interAd.appendChild(closeBtn);
+                    document.body.appendChild(interAd);
+                });
+                this.els.interstitialAds = Array.from(document.querySelectorAll(".interstitial-ad"));
+            },
+            renderBottomBannerAd() {
+                const { imgUrl, linkUrl } = this.config.bottomBannerAd;
+                const a = document.createElement("a");
+                a.href = linkUrl || "#";
+                a.target = "_blank";
+                const img = document.createElement("img");
+                img.src = imgUrl || "https://picsum.photos/1050/131.25?random=fallback";
+                img.alt = "底部条幅广告";
+                a.appendChild(img);
+                this.els.bottomBannerAd.innerHTML = "";
+                this.els.bottomBannerAd.appendChild(this.els.bannerCloseBtn);
+                this.els.bottomBannerAd.appendChild(a);
+            },
+            renderFloatAd() {
+                const { imgUrl, linkUrl, text = "限时福利" } = this.config.floatAd;
+                const a = this.els.floatAd.querySelector("a");
+                const img = this.els.floatAd.querySelector("img");
+                const textEl = this.els.floatAd.querySelector(".fontDiv");
+                a.href = linkUrl || "#";
+                img.src = imgUrl || "https://picsum.photos/75/112?random=fallback";
+                textEl.textContent = text;
+            },
+            initAds() {
+                this.els.bannerSwiperWrapper.innerHTML = "";
+                this.config.bannerAds.forEach((ad, idx) => {
+                    if (!ad.imgUrl) return;
+                    const slide = document.createElement("div");
+                    slide.className = "swiper-slide";
+                    slide.innerHTML = `<a href="${ad.linkUrl || '#'}" target="_blank"><img src="${ad.imgUrl}" alt="轮播广告${idx+1}"></a>`;
+                    this.els.bannerSwiperWrapper.appendChild(slide);
+                });
+                if (window.Swiper && this.config.bannerAds.length > 0) {
+                    new Swiper('.adSwipebox .swiper-container', {
+                        autoplay: { delay: 3000, disableOnInteraction: false },
+                        pagination: { el: '.swiper-pagination', clickable: true },
+                        loop: this.config.bannerAds.length >= 2,
+                        observer: true,
+                        observeParents: true
+                    });
+                }
+            },
+            // 仅加载长视频列表，已删除短视频加载逻辑
+            async loadPlaylist() {
+                if (this.config.isLoading) return;
+                this.config.isLoading = true;
+                this.els.playlistContainer.innerHTML = '<div class="loading">加载长视频列表中...</div>';
+                try {
+                    const res = await fetch(this.config.TXT_URL_LONG);
+                    if (!res.ok) throw new Error(`列表请求失败：${res.status}`);
+                    const data = await res.json();
+                    const lines = data.contents.trim().split("\n").filter(line => line.trim());
+                    
+                    let pureUrlIdx = 0;
+                    this.config.videoList = lines.map(line => {
+                        const parts = line.split("|").map(p => p.trim());
+                        return {
+                            name: parts[0] || `未命名长视频${pureUrlIdx++}`,
+                            url: parts[1] || parts[0],
+                            date: parts[2] || "未知日期",
+                            isAd: false
+                        };
+                    }).filter(item => item.url.startsWith("http"));
+                    
+                    this.config.currentPage = 1;
+                    this.els.playlistCount.textContent = `共 ${this.config.videoList.length} 个长视频`;
+                    this.renderPlaylist();
+                    this.initPaginationDisabled();
+                    this.scrollToCurrentPlay();
+                } catch (err) {
+                    this.els.playlistContainer.innerHTML = `
+                        <div class="error">
+                            长视频列表加载失败：${err.message}
+                            <button class="retry-btn" onclick="App.loadPlaylist()">重试</button>
+                        </div>
+                    `;
+                } finally {
+                    this.config.isLoading = false;
+                }
+            },
+            renderPlaylist() {
+                const start = (this.config.currentPage - 1) * this.config.PAGE_SIZE;
+                const pageItems = this.config.videoList.slice(start, start + this.config.PAGE_SIZE);
+                this.els.playlistContainer.innerHTML = pageItems.length 
+                    ? pageItems.map((item, idx) => {
+                        const globalIdx = start + idx;
+                        return `
+                            <div class="playlist-item ${globalIdx === this.config.currentPlayIndex ? 'item-active' : ''}" onclick="App.playVideo(${globalIdx})">
+                                <span class="item-index">${globalIdx+1}.</span>
+                                <span class="item-name">${item.name}</span>
+                                <span class="item-date">${item.date}</span>
+                            </div>
+                        `;
+                    }).join('')
+                    : '<div class="error">当前页无长视频数据</div>';
+            },
+            playVideo(index) {
+                if (this.config.isInterstitialShowing || !this.config.videoList[index]) return;
+                
+                this.stopCurrentVideo();
+                this.config.isLoading = true;
+                this.config.currentPlayIndex = index;
+                
+                document.querySelectorAll(".playlist-item").forEach(el => el.classList.remove("item-active"));
+                const currentItemEl = document.querySelectorAll(".playlist-item")[index - (this.config.currentPage - 1) * this.config.PAGE_SIZE];
+                if (currentItemEl) currentItemEl.classList.add("item-active");
+                
+                const shouldShowPreAd = !this.config.videoList[index].isAd && this.config.adPlayCount < 3 && this.config.preAdImageSources.length > 0;
+                if (shouldShowPreAd) {
+                    this.showPreAd(index, () => {
+                        this.config.isLoading = false;
+                        this.scrollToCurrentPlay();
+                    });
+                } else {
+                    this.realPlayVideo(index);
+                    this.config.isLoading = false;
+                    this.scrollToCurrentPlay();
+                }
+            },
+            realPlayVideo(index) {
+                const item = this.config.videoList[index];
+                this.config.preAdPlaying = false;
+                
+                if (this.config.hls) {
+                    this.config.hls.destroy();
+                    this.config.hls = null;
+                }
+                
+                const resetLoading = () => this.config.isLoading = false;
+                try {
+                    // 支持HLS(m3u8)和普通MP4格式
+                    if (Hls.isSupported() && item.url.includes('.m3u8')) {
+                        this.config.hls = new Hls();
+                        this.config.hls.loadSource(item.url);
+                        this.config.hls.attachMedia(this.els.player);
+                        this.config.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                            this.els.player.play().catch(err => {
+                                console.error("视频播放失败：", err);
+                                resetLoading();
+                            });
+                            resetLoading();
+                        });
+                        this.config.hls.on(Hls.Events.ERROR, (event, data) => {
+                            console.error("HLS错误：", data);
+                            resetLoading();
+                            if (data.fatal) {
+                                this.config.hls.destroy();
+                                this.config.hls = null;
+                                this.els.player.src = item.url;
+                                this.els.player.play().catch(resetLoading);
+                            }
+                        });
+                    } else {
+                        this.els.player.src = item.url;
+                        this.els.player.play().catch(err => {
+                            console.error("原生播放失败：", err);
+                            resetLoading();
+                        });
+                        this.els.player.onloadeddata = resetLoading;
+                        this.els.player.onerror = resetLoading;
+                    }
+                } catch (err) {
+                    console.error("播放初始化失败：", err);
+                    resetLoading();
+                }
+            },
+            stopCurrentVideo() {
+                if (!this.els.player.paused) this.els.player.pause();
+                if (this.config.hls) {
+                    this.config.hls.destroy();
+                    this.config.hls = null;
+                }
+                this.els.player.src = "";
+                this.els.player.load();
+                this.config.preAdPlaying = false;
+                this.els.preAdContainer.style.display = "none";
+                this.els.playlistWrap.classList.remove('disabled');
+                if (this.config.adTimer) clearInterval(this.config.adTimer);
+            },
+            showPreAd(videoIndex, callback) {
+                this.config.adPlayCount++;
+                this.config.preAdPlaying = true;
+                this.els.playlistWrap.classList.add('disabled');
+                this.els.preAdContainer.style.display = "flex";
+                
+                const randomIdx = Math.floor(Math.random() * this.config.preAdImageSources.length);
+                const adImg = this.config.preAdImageSources[randomIdx];
+                const adLink = this.config.preAdLinkUrls[randomIdx] || "#";
+                
+                this.els.adImage.src = adImg;
+                this.els.adLink.href = adLink;
+                
+                this.els.adImage.onload = () => console.log("广告图片加载成功");
+                this.els.adImage.onerror = () => {
+                    console.error("广告图片加载失败，使用兜底图");
+                    this.els.adImage.src = "https://picsum.photos/1080/1920?random=fallback";
+                };
+                
+                let remainingSeconds = this.config.preAdSkipTime;
+                this.els.adSkipBtn.disabled = true;
+                this.els.adSkipBtn.textContent = `${remainingSeconds}s后进入`;
+                
+                this.config.adTimer = setInterval(() => {
+                    if (!this.config.preAdPlaying) {
+                        clearInterval(this.config.adTimer);
+                        return;
+                    }
+                    remainingSeconds--;
+                    this.els.adSkipBtn.textContent = `${remainingSeconds}s后进入`;
+                    if (remainingSeconds <= 0) {
+                        clearInterval(this.config.adTimer);
+                        this.els.adSkipBtn.disabled = false;
+                        this.els.adSkipBtn.textContent = "点击进入";
+                    }
+                }, 1000);
+                
+                const finishAd = () => {
+                    this.config.preAdPlaying = false;
+                    clearInterval(this.config.adTimer);
+                    this.els.preAdContainer.style.display = "none";
+                    this.els.playlistWrap.classList.remove('disabled');
+                    this.els.adSkipBtn.disabled = true;
+                    this.els.adSkipBtn.textContent = `${this.config.preAdSkipTime}s后进入`;
+                    this.realPlayVideo(videoIndex);
+                    callback && callback();
+                };
+                
+                this.els.adSkipBtn.onclick = finishAd;
+                const containerObserver = new MutationObserver(() => {
+                    if (this.els.preAdContainer.style.display !== "flex") {
+                        containerObserver.disconnect();
+                        finishAd();
+                    }
+                });
+                containerObserver.observe(this.els.preAdContainer, { attributes: true, attributeFilter: ['style'] });
+            },
+            showInterstitial(adIndex) {
+                if (adIndex < 1 || adIndex > this.els.interstitialAds.length || this.config.isInterstitialShowing) return;
+                this.config.currentInterstitial = adIndex;
+                this.config.isInterstitialShowing = true;
+                this.els.interstitialMask.style.display = 'block';
+                const ad = this.els.interstitialAds[adIndex - 1];
+                ad.style.display = 'flex';
+                setTimeout(() => ad.classList.add('show'), 50);
+            },
+            initPaginationDisabled() {
+                const maxPage = Math.ceil(this.config.videoList.length / this.config.PAGE_SIZE);
+                this.els.prevPageBtn.disabled = this.config.currentPage <= 1;
+                this.els.nextPageBtn.disabled = this.config.currentPage >= maxPage;
+                this.els.pageInput.max = maxPage || 1;
+            },
+            bindEvents() {
+                this.els.noticeCloseBtn.onclick = () => {
+                    this.els.noticeMask.style.display = "none";
+                    this.showInterstitial(1);
+                };
+                
+                this.els.nextBtn.onclick = () => {
+                    if (this.config.isInterstitialShowing || !this.config.videoList.length) return;
+                    const nextIdx = (this.config.currentPlayIndex + 1) % this.config.videoList.length;
+                    this.playVideo(nextIdx);
+                    const nextPage = Math.ceil((nextIdx + 1) / this.config.PAGE_SIZE);
+                    if (nextPage !== this.config.currentPage) {
+                        this.config.currentPage = nextPage;
+                        this.renderPlaylist();
+                        this.initPaginationDisabled();
+                    }
+                };
+                
+                this.els.prevPageBtn.onclick = () => {
+                    if (this.config.isInterstitialShowing || this.config.isLoading || this.config.currentPage <= 1) return;
+                    this.config.currentPage--;
+                    this.renderPlaylist();
+                    this.initPaginationDisabled();
+                };
+                
+                this.els.nextPageBtn.onclick = () => {
+                    if (this.config.isInterstitialShowing || this.config.isLoading) return;
+                    const maxPage = Math.ceil(this.config.videoList.length / this.config.PAGE_SIZE);
+                    if (this.config.currentPage < maxPage) {
+                        this.config.currentPage++;
+                        this.renderPlaylist();
+                        this.initPaginationDisabled();
+                    }
+                };
+                
+                this.els.jumpPageBtn.onclick = () => {
+                    if (this.config.isInterstitialShowing || this.config.isLoading) return;
+                    const page = parseInt(this.els.pageInput.value);
+                    const maxPage = Math.ceil(this.config.videoList.length / this.config.PAGE_SIZE);
+                    if (!isNaN(page) && page >= 1 && page <= maxPage) {
+                        this.config.currentPage = page;
+                        this.renderPlaylist();
+                        this.initPaginationDisabled();
+                    }
+                };
+                
+                this.els.currentPlayBtn.onclick = () => {
+                    if (this.config.isInterstitialShowing || this.config.isLoading) return;
+                    this.scrollToCurrentPlay();
+                };
+                
+                this.els.shareBtn.onclick = () => {
+                    if (this.config.isInterstitialShowing || this.config.isLoading) return;
+                    this.shareToQQ(); // 调用优化后的转发函数
+                };
+                
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('interstitial-ad-close')) {
+                        const currentAd = e.target.closest('.interstitial-ad');
+                        currentAd.classList.remove('show');
+                        this.config.isInterstitialShowing = false;
+                        setTimeout(() => {
+                            currentAd.style.display = 'none';
+                            const nextId = parseInt(e.target.dataset.next);
+                            nextId > 0 ? this.showInterstitial(nextId) : this.els.interstitialMask.style.display = 'none';
+                        }, 250);
+                    }
+                });
+                
+                this.els.floatAdClose.onclick = () => {
+                    if (!this.config.isInterstitialShowing) this.els.floatAd.style.display = 'none';
+                };
+                
+                this.els.bannerCloseBtn.onclick = () => {
+                    this.els.bottomBannerAd.style.display = 'none';
+                };
+                
+                this.els.pageInput.onkeydown = (e) => {
+                    if (e.key === 'Enter') this.els.jumpPageBtn.click();
+                };
+            }
+        };
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    </script>
+</body>
+</html>
