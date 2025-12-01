@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>长视频播放网页版（无短视频）</title>
-    <!-- 引入依赖CDN -->
+    <title>挖呀挖-你的随身片库</title>
+    <!-- 核心依赖CDN（必须保留：hls.js处理m3u8视频，Swiper处理轮播广告） -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.14/dist/hls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.css">
@@ -603,7 +603,7 @@
     <div class="notice-mask" id="noticeMask" style="display: none;">
         <div class="notice-container">
             <div class="notice-title" id="noticeTitle">系统公告</div>
-            <div class="notice-content" id="noticeContent">欢迎使用长视频播放网页版，无短视频内容</div>
+            <div class="notice-content" id="noticeContent">分享提示：建议在QQ内打开本网页，点击分享可直接唤起转发界面</div>
             <div class="notice-footer">
                 <span class="notice-countdown" id="noticeCountdown">2秒后可关闭</span>
                 <button class="notice-close-btn" id="noticeCloseBtn" disabled>关闭</button>
@@ -672,7 +672,7 @@
     <script>
         const App = {
             config: {
-                // 仅保留长视频列表地址，已删除短视频相关配置
+                //  核心配置：长视频列表地址
                 TXT_URL_LONG: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://hk.gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist.txt"),
                 PAGE_SIZE: 10,
                 currentPage: 1,
@@ -684,16 +684,18 @@
                 isInterstitialShowing: false,
                 adPlayCount: 0,
                 preAdPlaying: false,
+                // 广告配置
                 GITEE_AD_CONFIG_URL: "https://gitee.com/t-bg/kk/raw/master/ads.json",
+                // 分享配置：仅加载fenxiang.txt文本
                 GITEE_SHARE_URL: "https://gitee.com/t-bg/kk/raw/master/fenxiang.txt",
-                shareContent: "推荐一个超好用的长视频播放网页版，快来看看吧！",
-                // 🔥 关键配置：填写当前网页的在线访问地址（必须部署后替换，否则转发链接无效）
-                WEB_PAGE_URL: "https://your-deploy-url.com", // 示例：https://video-player-demo.netlify.app
+                shareContent: "好东西，偷偷看！",
+                // 公告配置
                 notice: {
                     enable: true,
                     title: "系统公告",
-                    content: "欢迎使用长视频播放网页版，已移除短视频内容，仅保留长视频资源"
+                    content: "挖呀挖-你的随身片库"
                 },
+                // 广告资源默认配置
                 preAdImageSources: [ 
                     "https://picsum.photos/1080/1920?random=100",
                     "https://picsum.photos/1080/1920?random=101"
@@ -727,6 +729,7 @@
                 }
             },
             els: {
+                // 核心功能元素
                 player: document.getElementById("player"),
                 playlistContainer: document.getElementById("playlistContainer"),
                 playlistCount: document.getElementById("playlistCount"),
@@ -738,6 +741,7 @@
                 jumpPageBtn: document.getElementById("jumpPage"),
                 currentPlayBtn: document.getElementById("currentPlayBtn"),
                 shareBtn: document.getElementById("shareBtn"),
+                // 广告相关元素
                 interstitialMask: document.getElementById("interstitialMask"),
                 interstitialAds: [], 
                 adImage: document.getElementById("adImage"),
@@ -750,6 +754,7 @@
                 bottomBannerAd: document.getElementById("bottomBannerAd"),
                 floatAd: document.getElementById("floatAd"),
                 bannerCloseBtn: document.getElementById("bannerCloseBtn"),
+                // 公告相关元素
                 noticeMask: document.getElementById("noticeMask"),
                 noticeTitle: document.getElementById("noticeTitle"),
                 noticeContent: document.getElementById("noticeContent"),
@@ -759,8 +764,8 @@
             init() {
                 this.bindEvents();
                 this.loadAdConfigFromGitee();
-                this.loadShareContent(); // 优先加载Gitee的fenxiang.txt
-                this.loadPlaylist(); // 固定加载长视频列表，无短视频切换逻辑
+                this.loadShareContent();
+                this.loadPlaylist();
                 this.initPaginationDisabled();
                 this.watchSplashClose();
                 this.els.player.pause();
@@ -836,7 +841,6 @@
                         this.renderFloatAd();
                     });
             },
-            // 加载Gitee的fenxiang.txt作为转发内容
             loadShareContent() {
                 const proxyUrl = "https://allorigins.hexlet.app/get?url=" + encodeURIComponent(this.config.GITEE_SHARE_URL);
                 fetch(proxyUrl)
@@ -846,22 +850,16 @@
                     })
                     .then(proxyData => {
                         const shareText = proxyData.contents.trim();
-                        // 若fenxiang.txt有内容，替换默认转发文案
                         if (shareText) this.config.shareContent = shareText;
                     })
                     .catch(err => {
                         console.error("❌ fenxiang.txt加载失败，使用默认转发文案：", err.message);
                     });
             },
-            // 🔥 核心优化：QQ转发协议（唤起转发界面，而非聊天窗口）
+            // QQ文本转发核心函数
             shareToQQ() {
-                // 1. 编码转发内容（fenxiang.txt加载的文本）
-                const shareTitle = encodeURIComponent(this.config.shareContent);
-                // 2. 编码网页链接（必须是部署后的在线地址，Base64编码）
-                const webUrl = btoa(encodeURIComponent(this.config.WEB_PAGE_URL));
-                // 3. QQ转发专属Scheme（兼容iOS/Android）
-                const qqShareUrl = `mqqapi://forward/url?plg_type=2&plg_auth=1&msg_type=text&plg_nld=1&plg_usr=1&url_prefix=${webUrl}&title=${shareTitle}`;
-                // 唤起QQ转发界面
+                const shareText = encodeURIComponent(this.config.shareContent);
+                const qqShareUrl = `mqqapi://forward/url?plg_auth=1&msg_type=text&title=${shareText}&web_src=oicqzone.com`;
                 window.location.href = qqShareUrl;
             },
             scrollToCurrentPlay() {
@@ -977,7 +975,6 @@
                     });
                 }
             },
-            // 仅加载长视频列表，已删除短视频加载逻辑
             async loadPlaylist() {
                 if (this.config.isLoading) return;
                 this.config.isLoading = true;
@@ -1065,7 +1062,7 @@
                 
                 const resetLoading = () => this.config.isLoading = false;
                 try {
-                    // 支持HLS(m3u8)和普通MP4格式
+                    // 依赖hls.js处理m3u8视频
                     if (Hls.isSupported() && item.url.includes('.m3u8')) {
                         this.config.hls = new Hls();
                         this.config.hls.loadSource(item.url);
@@ -1239,7 +1236,7 @@
                 
                 this.els.shareBtn.onclick = () => {
                     if (this.config.isInterstitialShowing || this.config.isLoading) return;
-                    this.shareToQQ(); // 调用优化后的转发函数
+                    this.shareToQQ();
                 };
                 
                 document.addEventListener('click', (e) => {
@@ -1268,7 +1265,6 @@
                 };
             }
         };
-        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
