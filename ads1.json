@@ -31,6 +31,7 @@
     "skipTime": 5
   },
   "interstitialAds": [
+    { "imgUrl": "cptp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.2.apk" },
     { "imgUrl": "开元插屏.jpg", "linkUrl": "https://K3201.CC" },
     { "imgUrl": "cptp1.png", "linkUrl": "https://K3201.CC" }
   ],
@@ -58,6 +59,7 @@
     }
   }
 }
+
 
 
 
