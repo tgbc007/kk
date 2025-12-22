@@ -1,4 +1,19 @@
 {
+   "marquee": {
+    "enable": true,
+    "text": "🎉 官方APP已上线！下载APP享高清流畅观影体验！ 🎉 问题反馈QQ：1519066402 🎉",
+    "speed": "normal", // slow, normal, fast
+    "direction": "left", // left, right
+    "backgroundColor": "rgba(22, 93, 255, 0.1)",
+    "textColor": "#FFFFFF",
+    "fontSize": "14px",
+    "fontWeight": "500",
+    "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.2.apk",
+    "showCloseButton": true,
+    "autoHide": false,
+    "hideAfter": 10, // 秒数，autoHide为true时生效
+    "repeat": true // 是否循环显示
+  },
   "preAdImageSources": [
     "tptp.jpg"
   ],
@@ -42,4 +57,5 @@
       
     }
   }
+
 }
