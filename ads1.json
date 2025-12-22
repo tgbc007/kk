@@ -1,0 +1,45 @@
+{
+  "preAdImageSources": [
+    "tptp.jpg"
+  ],
+  "preAdLinkUrls": [
+    "https://K3201.CC"
+  ],
+  "preAdSkipTime": 5,
+  "bannerAds": [
+    { "imgUrl": "lbtp1.jpg", "linkUrl": "https://gitee.com/t-bg/kk/raw/master/wyw1.0.2.apk" },
+    { "imgUrl": "lbtp2.jpg", "linkUrl": "https://gitee.com/t-bg/kk/raw/master/wyw1.0.2.apk" }
+  ],
+  "sponsorAd": {
+    "imgUrl": "kaiyunkaiping.jpg",
+    "linkUrl": "http://577kyty.vip",
+    "skipTime": 5
+  },
+  "interstitialAds": [
+    { "imgUrl": "开元插屏.jpg", "linkUrl": "https://K3201.CC" },
+    { "imgUrl": "cptp1.png", "linkUrl": "https://K3201.CC" }
+  ],
+  "bottomBannerAd": {
+    "imgUrl": "开元横幅.gif",
+    "linkUrl": "https://K3201.CC"
+  },
+  "floatAd": {
+    "imgUrl": "官方app.jpg",
+    "linkUrl": "https://gitee.com/t-bg/kk/raw/master/wyw1.0.2.apk",
+    "text": "强烈推荐"
+  },
+  "notice": {
+    "enable": true,
+    "title": "公告",
+    "content": "官方网址 wacb.top （我爱cb） <br>网站绝大多数资源被恶意拦截，导致卡顿、清晰度受损。<br>强烈建议下载官方app，体验超多资源超高清、超流畅的观影！<br>自己撸不如一起撸！快分享给你的好兄弟吧！！<br>问题反馈QQ：1519066402",
+    "downloadUrl": "https://gitee.com/t-bg/kk/raw/master/wyw1.0.2.apk",
+    "style": {
+      "background": "#FF6B6B",
+      "color": "#FFFFFF",
+      "titleFontSize": "24px",
+      "titleFontWeight": "bold",
+      "contentFontSize": "16px"
+      
+    }
+  }
+}
