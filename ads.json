@@ -7,8 +7,8 @@
   ],
   "preAdSkipTime": 5,
   "bannerAds": [
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp1.jpg", "linkUrl": "https://www.baidu.com" },
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp2.jpg", "linkUrl": "https://www.baidu.com" }
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.2.apk" },
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.2.apk" }
   ],
   "sponsorAd": {
     "imgUrl": "https://gitee.com/t-bg/kk/raw/master/kaiyunkaiping.jpg",
@@ -40,4 +40,5 @@
       "contentFontSize": "16px"
     }
   }
+
 }
