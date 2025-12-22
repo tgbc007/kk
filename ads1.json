@@ -48,7 +48,7 @@
     "enable": true,
     "title": "公告",
     "content": "官方网址 wacb.top （我爱cb） <br>网站绝大多数资源被恶意拦截，导致卡顿、清晰度受损。<br>强烈建议下载官方app，体验超多资源超高清、超流畅的观影！<br>自己撸不如一起撸！快分享给你的好兄弟吧！！<br>问题反馈QQ：1519066402",
-    "downloadUrl": "https://gitee.com/t-bg/kk/raw/master/wyw1.0.3.apk",
+    "downloadUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk",
     "style": {
       "background": "#FF6B6B",
       "color": "#FFFFFF",
@@ -59,6 +59,7 @@
     }
   }
 }
+
 
 
 
