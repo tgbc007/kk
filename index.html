@@ -25,6 +25,85 @@
             -webkit-tap-highlight-color: transparent;
             -webkit-text-size-adjust: 100%;
         }
+        
+        /* 滚动文字公告样式 */
+        .marquee-container {
+            width: 100%;
+            background: rgba(22, 93, 255, 0.1);
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 500;
+            overflow: hidden;
+            position: relative;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: none; /* 默认隐藏，通过配置控制显示 */
+            flex-shrink: 0;
+        }
+        
+        .marquee-content {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+        }
+        
+        .marquee-content:hover {
+            animation-play-state: paused;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        @keyframes marquee-right {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .marquee-content a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .marquee-content a:hover {
+            color: #FFD700;
+        }
+        
+        .marquee-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .marquee-close {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 101;
+        }
+        
+        .marquee-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
         /* 电脑端竖屏容器 - 优化 */
         .pc-vertical-container {
             width: 100%;
@@ -35,6 +114,7 @@
             position: relative;
             background: #000;
         }
+        
         /* 应用包装器 - 移动端全屏，电脑端竖屏居中 */
         .app-wrapper {
             width: 100%;
@@ -45,6 +125,7 @@
             overflow: hidden;
             position: relative;
         }
+        
         /* 电脑端特定样式 - 优化 */
         @media (min-width: 1024px) {
             body {
@@ -161,7 +242,14 @@
                 margin: 0 10px 10px !important;
                 border-radius: 10px !important;
             }
+            /* 调整滚动文字 */
+            .marquee-container {
+                border-radius: 8px 8px 0 0;
+                margin: 0 10px;
+                width: calc(100% - 20px);
+            }
         }
+        
         /* 移动端优化 */
         @media (max-width: 768px) {
             .player-area {
@@ -179,6 +267,13 @@
             .bottom-buttons-container {
                 padding: 4px 12px 12px;
                 gap: 10px;
+            }
+            .marquee-container {
+                font-size: 12px;
+                padding: 6px 0;
+            }
+            .marquee-content {
+                animation: marquee 15s linear infinite;
             }
         }
         
@@ -969,6 +1064,14 @@
                 <button class="banner-close-btn" id="bannerCloseBtn">×</button>
             </div>
             <div class="app-container">
+                <!-- 滚动文字公告 -->
+                <div class="marquee-container" id="marqueeContainer">
+                    <div class="marquee-content" id="marqueeContent">
+                        <!-- 内容将通过JS动态生成 -->
+                    </div>
+                    <button class="marquee-close" id="marqueeCloseBtn">×</button>
+                </div>
+                
                 <div class="interstitial-mask" id="interstitialMask"></div>
                 <div class="adSwipebox">
                     <div class="swiper-container">
@@ -1020,7 +1123,8 @@
     <script>
         const App = {
             config: {
-                TXT_URL_LONG: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-1.txt"),
+                // GitHub仓库配置
+                TXT_URL_LONG: "https://cdn.jsdelivr.net/gh/tgbc007/kk/playlist-1.txt",
                 PAGE_SIZE: 10,
                 currentPage: 1,
                 videoList: [],
@@ -1031,27 +1135,43 @@
                 isInterstitialShowing: false,
                 adPlayCount: 0,
                 preAdPlaying: false,
-                GITEE_AD_CONFIG_URL: "https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/ads1.json",
+                GITHUB_AD_CONFIG_URL: "https://cdn.jsdelivr.net/gh/tgbc007/kk/ads1.json",
                 notice: {
                     enable: true,
                     title: "系统公告",
                     content: "若访问失败联系QQ：1519066402",
-                    downloadUrl: "" // 新增：下载按钮链接
+                    downloadUrl: ""
+                },
+                // 滚动文字配置
+                marquee: {
+                    enable: false,
+                    text: "",
+                    speed: "normal",
+                    direction: "left",
+                    backgroundColor: "rgba(22, 93, 255, 0.1)",
+                    textColor: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    linkUrl: "",
+                    showCloseButton: true,
+                    autoHide: false,
+                    hideAfter: 10,
+                    repeat: true
                 },
                 preAdImageSources: [],
                 preAdLinkUrls: [],
                 preAdSkipTime: 3,
                 bannerAds: [],
-                sponsorAd: { imgUrl: "", linkUrl: "", skipTime: 5 }, // 开屏广告倒计时改为5秒
+                sponsorAd: { imgUrl: "", linkUrl: "", skipTime: 5 },
                 interstitialAds: [],
                 bottomBannerAd: { imgUrl: "", linkUrl: "" },
                 floatAd: { imgUrl: "", linkUrl: "", text: "限时福利" },
                 adConfigLoaded: false,
                 hasShownSplashAd: false,
-                splashAdTimer: null, // 开屏广告计时器
-                loadingTimer: null,  // 启动图片关闭计时器
-                splashAdCountdown: 5, // 开屏广告倒计时时间
-                splashAdSkippable: true // 开屏广告是否可跳过
+                splashAdTimer: null,
+                loadingTimer: null,
+                splashAdCountdown: 5,
+                splashAdSkippable: true
             },
             els: {
                 loadingScreen: document.getElementById("loadingScreen"),
@@ -1083,7 +1203,11 @@
                 noticeContent: document.getElementById("noticeContent"),
                 noticeCountdown: document.getElementById("noticeCountdown"),
                 noticeCloseBtn: document.getElementById("noticeCloseBtn"),
-                noticeDownloadBtn: document.getElementById("noticeDownloadBtn"), // 新增：下载按钮
+                noticeDownloadBtn: document.getElementById("noticeDownloadBtn"),
+                // 滚动文字元素
+                marqueeContainer: document.getElementById("marqueeContainer"),
+                marqueeContent: document.getElementById("marqueeContent"),
+                marqueeCloseBtn: document.getElementById("marqueeCloseBtn"),
                 exitConfirmMask: document.getElementById("exitConfirmMask"),
                 exitConfirmCancel: document.getElementById("exitConfirmCancel"),
                 exitConfirmOk: document.getElementById("exitConfirmOk")
@@ -1100,7 +1224,7 @@
                 console.log("🎯 开始初始化应用功能...");
 
                 // 先加载广告配置
-                this.loadAdConfigFromGitee().then(() => {
+                this.loadAdConfigFromGITHUB().then(() => {
                     console.log("✅ 广告配置加载完成");
                     // 然后加载视频列表
                     this.loadPlaylist().then(() => {
@@ -1231,9 +1355,6 @@
                 
                 // 开始倒计时
                 updateCountdown();
-                
-                // 注意：这里移除了自动关闭的逻辑，开屏广告不会自动关闭
-                // 只有用户点击跳过按钮才会关闭
             },
             closeSplashAd() {
                 // 清除加载计时器
@@ -1262,6 +1383,9 @@
             initAllAds() {
                 console.log("🔄 初始化所有广告");
                 
+                // 初始化滚动文字公告
+                this.initMarquee();
+                
                 // 初始化插屏广告
                 this.renderInterstitialAds();
                 
@@ -1273,6 +1397,81 @@
                 
                 // 初始化底部横幅广告
                 this.renderBottomBannerAd();
+            },
+            // 初始化滚动文字公告
+            initMarquee() {
+                const marqueeConfig = this.config.marquee;
+                
+                if (!marqueeConfig.enable) {
+                    this.els.marqueeContainer.style.display = "none";
+                    return;
+                }
+                
+                // 设置容器样式
+                const container = this.els.marqueeContainer;
+                container.style.backgroundColor = marqueeConfig.backgroundColor;
+                container.style.color = marqueeConfig.textColor;
+                container.style.fontSize = marqueeConfig.fontSize;
+                container.style.fontWeight = marqueeConfig.fontWeight;
+                container.style.display = "block";
+                
+                // 设置内容
+                const content = this.els.marqueeContent;
+                let marqueeHtml = `<span class="marquee-icon">📢</span> ${marqueeConfig.text}`;
+                
+                // 如果有链接，添加点击跳转
+                if (marqueeConfig.linkUrl) {
+                    content.innerHTML = `<a href="javascript:void(0)" onclick="App.openMarqueeLink()">${marqueeHtml}</a>`;
+                } else {
+                    content.innerHTML = marqueeHtml;
+                }
+                
+                // 设置动画速度
+                let animationDuration;
+                switch (marqueeConfig.speed) {
+                    case 'slow': animationDuration = '30s'; break;
+                    case 'fast': animationDuration = '10s'; break;
+                    default: animationDuration = '20s'; break;
+                }
+                
+                // 设置动画方向
+                let animationName = 'marquee';
+                if (marqueeConfig.direction === 'right') {
+                    animationName = 'marquee-right';
+                }
+                
+                content.style.animation = `${animationName} ${animationDuration} linear infinite`;
+                
+                // 设置关闭按钮
+                if (marqueeConfig.showCloseButton) {
+                    this.els.marqueeCloseBtn.style.display = "block";
+                } else {
+                    this.els.marqueeCloseBtn.style.display = "none";
+                }
+                
+                // 自动隐藏
+                if (marqueeConfig.autoHide && marqueeConfig.hideAfter > 0) {
+                    setTimeout(() => {
+                        this.hideMarquee();
+                    }, marqueeConfig.hideAfter * 1000);
+                }
+            },
+            // 打开滚动文字链接
+            openMarqueeLink() {
+                const linkUrl = this.config.marquee.linkUrl;
+                if (linkUrl) {
+                    this.openAdLink(linkUrl);
+                }
+            },
+            // 隐藏滚动文字
+            hideMarquee() {
+                this.els.marqueeContainer.style.display = "none";
+                // 如果设置了重复显示，可以在这里设置定时器重新显示
+                if (this.config.marquee.repeat) {
+                    setTimeout(() => {
+                        this.els.marqueeContainer.style.display = "block";
+                    }, 60000); // 1分钟后重新显示
+                }
             },
             handleNoticeAndInterstitial() {
                 const { enable, title, content, downloadUrl } = this.config.notice;
@@ -1309,48 +1508,42 @@
                     }
                 }, 1000);
             },
-            loadAdConfigFromGitee() {
+            loadAdConfigFromGITHUB() {
                 return new Promise((resolve, reject) => {
-                    const proxyUrl = "https://allorigins.hexlet.app/get?url=" + encodeURIComponent(this.config.GITEE_AD_CONFIG_URL);
-                    
-                    fetch(proxyUrl)
+                    fetch(this.config.GITHUB_AD_CONFIG_URL)
                         .then(res => {
                             if (!res.ok) throw new Error(`HTTP状态码：${res.status}`);
                             return res.json();
                         })
-                        .then(proxyData => {
-                            if (!proxyData || !proxyData.contents) {
-                                console.log("广告配置为空，使用默认设置");
-                                resolve();
-                                return;
+                        .then(adData => {
+                            this.config.preAdImageSources = adData.preAdImageSources || [];
+                            this.config.preAdLinkUrls = adData.preAdLinkUrls || [];
+                            this.config.preAdSkipTime = adData.preAdSkipTime > 0 ? adData.preAdSkipTime : 3;
+                            this.config.bannerAds = adData.bannerAds || [];
+                            this.config.sponsorAd = adData.sponsorAd || { imgUrl: "", linkUrl: "", skipTime: 5 };
+                            this.config.interstitialAds = adData.interstitialAds || [];
+                            this.config.bottomBannerAd = adData.bottomBannerAd || { imgUrl: "", linkUrl: "" };
+                            this.config.floatAd = adData.floatAd || { imgUrl: "", linkUrl: "", text: "限时福利" };
+                            
+                            // 加载滚动文字配置
+                            if (adData.marquee) {
+                                this.config.marquee = { 
+                                    ...this.config.marquee, 
+                                    ...adData.marquee 
+                                };
                             }
                             
-                            try {
-                                let adData = JSON.parse(proxyData.contents);
-                                this.config.preAdImageSources = adData.preAdImageSources || [];
-                                this.config.preAdLinkUrls = adData.preAdLinkUrls || [];
-                                this.config.preAdSkipTime = adData.preAdSkipTime > 0 ? adData.preAdSkipTime : 3;
-                                this.config.bannerAds = adData.bannerAds || [];
-                                this.config.sponsorAd = adData.sponsorAd || { imgUrl: "", linkUrl: "", skipTime: 5 };
-                                this.config.interstitialAds = adData.interstitialAds || [];
-                                this.config.bottomBannerAd = adData.bottomBannerAd || { imgUrl: "", linkUrl: "" };
-                                this.config.floatAd = adData.floatAd || { imgUrl: "", linkUrl: "", text: "限时福利" };
-                                
-                                // 更新通知配置，包括下载链接
-                                if (adData.notice) {
-                                    this.config.notice = { 
-                                        ...this.config.notice, 
-                                        ...adData.notice 
-                                    };
-                                }
-                                
-                                this.config.adConfigLoaded = true;
-                                console.log("✅ 广告配置加载成功");
-                                resolve();
-                            } catch (parseErr) {
-                                console.error("解析广告配置失败：", parseErr);
-                                resolve();
+                            // 更新通知配置，包括下载链接
+                            if (adData.notice) {
+                                this.config.notice = { 
+                                    ...this.config.notice, 
+                                    ...adData.notice 
+                                };
                             }
+                            
+                            this.config.adConfigLoaded = true;
+                            console.log("✅ 广告配置加载成功");
+                            resolve();
                         })
                         .catch(err => {
                             console.error("❌ ads.json加载失败：", err.message);
@@ -1544,8 +1737,8 @@
                     try {
                         const res = await fetch(this.config.TXT_URL_LONG);
                         if (!res.ok) throw new Error(`列表请求失败：${res.status}`);
-                        const data = await res.json();
-                        const lines = data.contents.trim().split("\n").filter(line => line.trim());
+                        const text = await res.text();
+                        const lines = text.trim().split("\n").filter(line => line.trim());
                         
                         let pureUrlIdx = 0;
                         this.config.videoList = lines.map(line => {
@@ -1772,6 +1965,11 @@
                         this.els.exitConfirmMask.style.display = 'flex';
                     });
                 }
+                
+                // 滚动文字关闭按钮
+                this.els.marqueeCloseBtn.onclick = () => {
+                    this.hideMarquee();
+                };
                 
                 this.els.noticeCloseBtn.onclick = () => {
                     this.els.noticeMask.style.display = "none";
