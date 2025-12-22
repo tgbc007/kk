@@ -1,0 +1,43 @@
+{
+  "preAdImageSources": [
+    "https://gitee.com/t-bg/kk/raw/master/tptp.jpg"
+  ],
+  "preAdLinkUrls": [
+    "https://K3201.CC"
+  ],
+  "preAdSkipTime": 5,
+  "bannerAds": [
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp1.jpg", "linkUrl": "https://www.baidu.com" },
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp2.jpg", "linkUrl": "https://www.baidu.com" }
+  ],
+  "sponsorAd": {
+    "imgUrl": "https://gitee.com/t-bg/kk/raw/master/kaiyunkaiping.jpg",
+    "linkUrl": "http://577kyty.vip",
+    "skipTime": 5
+  },
+  "interstitialAds": [
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/%E5%BC%80%E5%85%83%E6%8F%92%E5%B1%8F.jpg", "linkUrl": "https://K3201.CC" },
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/cptp1.png", "linkUrl": "https://K3201.CC" }
+  ],
+  "bottomBannerAd": {
+    "imgUrl": "https://gitee.com/t-bg/kk/raw/master/%E5%BC%80%E5%85%83%E6%A8%AA%E5%B9%85.gif",
+    "linkUrl": "https://K3201.CC"
+  },
+  "floatAd": {
+    "imgUrl": "https://gitee.com/t-bg/kk/raw/master/%E5%BC%80%E5%85%83%E6%82%AC%E6%B5%AE.gif",
+    "linkUrl": "https://K3201.CC",
+    "text": "强烈推荐"
+  },
+  "notice": {
+    "enable": true,
+    "title": "公告",
+    "content": "本软件永久免费！未满18岁请自觉离开！<br>众人拾柴火焰高，请不要吝啬你们的分享！<br>你们的分享决定了我们能坚持多久！<br>官网：wacb.top (我爱CB)！<br>问题反馈QQ：1519066402",
+    "style": {
+      "background": "#FF6B6B",
+      "color": "#FFFFFF",
+      "titleFontSize": "24px",
+      "titleFontWeight": "bold",
+      "contentFontSize": "16px"
+    }
+  }
+}
