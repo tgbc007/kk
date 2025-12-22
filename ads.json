@@ -1,7 +1,7 @@
 {
   "marquee": {
     "enable": true,
-    "text": "🎉官方APP已上线！几千部高清影片随意观看！若网站显示不全，点击下载官方APP享高清流畅观影体验！ 🎉",
+    "text": "🎉本站影片永久免费，持续更新。适合成年人释放压力，未满18岁禁止下载使用。 🎉",
     "speed": "normal",
     "direction": "left",
     "backgroundColor": "rgba(22, 93, 255, 0.1)",
@@ -57,4 +57,5 @@
   }
 
 }
+
 
