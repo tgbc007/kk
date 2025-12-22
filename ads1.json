@@ -1,7 +1,7 @@
 {
    "marquee": {
     "enable": true,
-    "text": "🎉 官方APP已上线！点击下载APP享高清流畅观影体验！ 🎉 问题反馈QQ：1519066402 🎉",
+    "text": "🎉官方APP已上线！几千部高清影片随意观看！若网站显示不全，点击下载官方APP享高清流畅观影体验！ 🎉",
     "speed": "normal",
     "direction": "left",
     "backgroundColor": "rgba(22, 93, 255, 0.1)",
@@ -58,6 +58,7 @@
     }
   }
 }
+
 
 
 
