@@ -1,18 +1,7 @@
 {
-   "marquee": {
-    "enable": true,
-    "text": "🎉 官方APP已上线！下载APP享高清流畅观影体验！ 🎉 问题反馈QQ：1519066402 🎉",
-    "speed": "normal", 
-    "direction": "left", 
-    "backgroundColor": "rgba(22, 93, 255, 0.1)",
-    "textColor": "#FFFFFF",
-    "fontSize": "14px",
-    "fontWeight": "500",
-    "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.2.apk",
-    "showCloseButton": true,
-    "autoHide": false,
-    "hideAfter": 10, 
-    "repeat": true
+   "marqueeAd": {
+    "text": "🎉 限时福利：新用户注册即送VIP会员！点击查看详情 >>",
+    "linkUrl": "https://example.com/promotion"
   },
   "preAdImageSources": [
     "tptp.jpg"
@@ -58,5 +47,6 @@
     }
   }
 }
+
 
 
