@@ -25,6 +25,85 @@
             -webkit-tap-highlight-color: transparent;
             -webkit-text-size-adjust: 100%;
         }
+        
+        /* 滚动文字公告样式 - 来自index.html */
+        .marquee-container {
+            width: 100%;
+            background: rgba(22, 93, 255, 0.1);
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 500;
+            overflow: hidden;
+            position: relative;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: none; /* 默认隐藏，通过配置控制显示 */
+            flex-shrink: 0;
+        }
+        
+        .marquee-content {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+        }
+        
+        .marquee-content:hover {
+            animation-play-state: paused;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        @keyframes marquee-right {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .marquee-content a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .marquee-content a:hover {
+            color: #FFD700;
+        }
+        
+        .marquee-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .marquee-close {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 101;
+        }
+        
+        .marquee-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
         /* 电脑端竖屏容器 - 优化 */
         .pc-vertical-container {
             width: 100%;
@@ -35,6 +114,7 @@
             position: relative;
             background: #000;
         }
+        
         /* 应用包装器 - 移动端全屏，电脑端竖屏居中 */
         .app-wrapper {
             width: 100%;
@@ -44,87 +124,6 @@
             box-shadow: none;
             overflow: hidden;
             position: relative;
-        }
-        /* 滚动文字广告 */
-        .marquee-ad {
-            width: calc(100% - 20px);
-            height: 32px;
-            margin: 5px auto;
-            background: linear-gradient(90deg, rgba(22, 93, 255, 0.1) 0%, rgba(22, 93, 255, 0.05) 100%);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(22, 93, 255, 0.2);
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-        }
-        
-        .marquee-ad a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .marquee-text {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee-scroll 15s linear infinite;
-            font-size: 14px;
-            color: #fff;
-            padding-left: 100%;
-            line-height: 32px;
-        }
-        
-        .marquee-ad:hover .marquee-text {
-            animation-play-state: paused;
-        }
-        
-        @keyframes marquee-scroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-        
-        .marquee-icon {
-            margin-right: 8px;
-            color: #FFD700;
-            font-weight: bold;
-            font-size: 16px;
-            animation: blink 2s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .marquee-close {
-            position: absolute;
-            right: 6px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            color: #fff;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
         }
         
         /* 电脑端特定样式 - 优化 */
@@ -185,11 +184,11 @@
                 border-top: 1px solid rgba(255, 255, 255, 0.05);
                 border-radius: 0 0 20px 20px;
             }
-            /* 调整滚动文字广告位置 */
-            .marquee-ad {
-                margin-top: 35px !important;
-                border-radius: 10px !important;
-                height: 30px !important;
+            /* 调整滚动文字公告位置 */
+            .marquee-container {
+                border-radius: 8px 8px 0 0;
+                margin: 35px 10px 0;
+                width: calc(100% - 20px);
             }
             /* 调整底部横幅广告位置 */
             .bottom-banner-ad {
@@ -250,17 +249,16 @@
                 border-radius: 10px !important;
             }
         }
+        
         /* 移动端优化 */
         @media (max-width: 768px) {
-            .marquee-ad {
-                height: 30px;
-                margin: 8px auto;
+            .marquee-container {
+                font-size: 12px;
+                padding: 6px 0;
             }
-            
-            .marquee-text {
-                font-size: 13px;
+            .marquee-content {
+                animation: marquee 15s linear infinite;
             }
-            
             .player-area {
                 height: 30vh !important;
             }
@@ -1062,19 +1060,18 @@
     <!-- 主应用容器 -->
     <div class="pc-vertical-container" id="pcVerticalContainer">
         <div class="app-wrapper">
-            <!-- 滚动文字广告 -->
-            <div class="marquee-ad" id="marqueeAd">
-                <button class="marquee-close" id="marqueeCloseBtn">×</button>
-                <a href="javascript:void(0)" id="marqueeLink">
-                    <span class="marquee-icon">🔥</span>
-                    <span class="marquee-text" id="marqueeText">欢迎来到视频播放应用，点击查看更多精彩内容！</span>
-                </a>
-            </div>
-            
             <div class="bottom-banner-ad" id="bottomBannerAd">
                 <button class="banner-close-btn" id="bannerCloseBtn">×</button>
             </div>
             <div class="app-container">
+                <!-- 滚动文字公告 - 来自index.html -->
+                <div class="marquee-container" id="marqueeContainer">
+                    <div class="marquee-content" id="marqueeContent">
+                        <!-- 内容将通过JS动态生成 -->
+                    </div>
+                    <button class="marquee-close" id="marqueeCloseBtn">×</button>
+                </div>
+                
                 <div class="interstitial-mask" id="interstitialMask"></div>
                 <div class="adSwipebox">
                     <div class="swiper-container">
@@ -1144,6 +1141,22 @@
                     content: "若访问失败联系QQ：1519066402",
                     downloadUrl: "" // 新增：下载按钮链接
                 },
+                // 滚动文字配置 - 来自index.html
+                marquee: {
+                    enable: false,
+                    text: "",
+                    speed: "normal",
+                    direction: "left",
+                    backgroundColor: "rgba(22, 93, 255, 0.1)",
+                    textColor: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    linkUrl: "",
+                    showCloseButton: true,
+                    autoHide: false,
+                    hideAfter: 10,
+                    repeat: true
+                },
                 preAdImageSources: [],
                 preAdLinkUrls: [],
                 preAdSkipTime: 3,
@@ -1152,7 +1165,6 @@
                 interstitialAds: [],
                 bottomBannerAd: { imgUrl: "", linkUrl: "" },
                 floatAd: { imgUrl: "", linkUrl: "", text: "限时福利" },
-                marqueeAd: { text: "", linkUrl: "" }, // 新增：滚动文字广告配置
                 adConfigLoaded: false,
                 hasShownSplashAd: false,
                 splashAdTimer: null, // 开屏广告计时器
@@ -1194,10 +1206,9 @@
                 exitConfirmMask: document.getElementById("exitConfirmMask"),
                 exitConfirmCancel: document.getElementById("exitConfirmCancel"),
                 exitConfirmOk: document.getElementById("exitConfirmOk"),
-                // 新增：滚动文字广告元素
-                marqueeAd: document.getElementById("marqueeAd"),
-                marqueeLink: document.getElementById("marqueeLink"),
-                marqueeText: document.getElementById("marqueeText"),
+                // 滚动文字元素 - 来自index.html
+                marqueeContainer: document.getElementById("marqueeContainer"),
+                marqueeContent: document.getElementById("marqueeContent"),
                 marqueeCloseBtn: document.getElementById("marqueeCloseBtn")
             },
             init() {
@@ -1374,8 +1385,8 @@
             initAllAds() {
                 console.log("🔄 初始化所有广告");
                 
-                // 初始化滚动文字广告
-                this.renderMarqueeAd();
+                // 初始化滚动文字公告 - 来自index.html
+                this.initMarquee();
                 
                 // 初始化插屏广告
                 this.renderInterstitialAds();
@@ -1389,31 +1400,80 @@
                 // 初始化底部横幅广告
                 this.renderBottomBannerAd();
             },
-            // 新增：初始化滚动文字广告
-            renderMarqueeAd() {
-                const { text, linkUrl } = this.config.marqueeAd;
-                const marqueeAd = this.els.marqueeAd;
+            // 初始化滚动文字公告 - 来自index.html
+            initMarquee() {
+                const marqueeConfig = this.config.marquee;
                 
-                if (!text) {
-                    marqueeAd.style.display = "none";
+                if (!marqueeConfig.enable) {
+                    this.els.marqueeContainer.style.display = "none";
                     return;
                 }
                 
-                // 设置滚动文字内容
-                this.els.marqueeText.textContent = text;
+                // 设置容器样式
+                const container = this.els.marqueeContainer;
+                container.style.backgroundColor = marqueeConfig.backgroundColor;
+                container.style.color = marqueeConfig.textColor;
+                container.style.fontSize = marqueeConfig.fontSize;
+                container.style.fontWeight = marqueeConfig.fontWeight;
+                container.style.display = "block";
                 
-                // 设置点击链接
-                this.els.marqueeLink.href = "javascript:void(0)";
-                this.els.marqueeLink.onclick = () => {
-                    if (linkUrl) {
-                        this.openAdLink(linkUrl);
-                    }
-                };
+                // 设置内容
+                const content = this.els.marqueeContent;
+                let marqueeHtml = `<span class="marquee-icon">📢</span> ${marqueeConfig.text}`;
                 
-                // 显示滚动文字广告
-                marqueeAd.style.display = "flex";
+                // 如果有链接，添加点击跳转
+                if (marqueeConfig.linkUrl) {
+                    content.innerHTML = `<a href="javascript:void(0)" onclick="App.openMarqueeLink()">${marqueeHtml}</a>`;
+                } else {
+                    content.innerHTML = marqueeHtml;
+                }
                 
-                console.log("✅ 滚动文字广告初始化成功");
+                // 设置动画速度
+                let animationDuration;
+                switch (marqueeConfig.speed) {
+                    case 'slow': animationDuration = '30s'; break;
+                    case 'fast': animationDuration = '10s'; break;
+                    default: animationDuration = '20s'; break;
+                }
+                
+                // 设置动画方向
+                let animationName = 'marquee';
+                if (marqueeConfig.direction === 'right') {
+                    animationName = 'marquee-right';
+                }
+                
+                content.style.animation = `${animationName} ${animationDuration} linear infinite`;
+                
+                // 设置关闭按钮
+                if (marqueeConfig.showCloseButton) {
+                    this.els.marqueeCloseBtn.style.display = "block";
+                } else {
+                    this.els.marqueeCloseBtn.style.display = "none";
+                }
+                
+                // 自动隐藏
+                if (marqueeConfig.autoHide && marqueeConfig.hideAfter > 0) {
+                    setTimeout(() => {
+                        this.hideMarquee();
+                    }, marqueeConfig.hideAfter * 1000);
+                }
+            },
+            // 打开滚动文字链接 - 来自index.html
+            openMarqueeLink() {
+                const linkUrl = this.config.marquee.linkUrl;
+                if (linkUrl) {
+                    this.openAdLink(linkUrl);
+                }
+            },
+            // 隐藏滚动文字 - 来自index.html
+            hideMarquee() {
+                this.els.marqueeContainer.style.display = "none";
+                // 如果设置了重复显示，可以在这里设置定时器重新显示
+                if (this.config.marquee.repeat) {
+                    setTimeout(() => {
+                        this.els.marqueeContainer.style.display = "block";
+                    }, 60000); // 1分钟后重新显示
+                }
             },
             handleNoticeAndInterstitial() {
                 const { enable, title, content, downloadUrl } = this.config.notice;
@@ -1476,7 +1536,14 @@
                                 this.config.interstitialAds = adData.interstitialAds || [];
                                 this.config.bottomBannerAd = adData.bottomBannerAd || { imgUrl: "", linkUrl: "" };
                                 this.config.floatAd = adData.floatAd || { imgUrl: "", linkUrl: "", text: "限时福利" };
-                                this.config.marqueeAd = adData.marqueeAd || { text: "", linkUrl: "" }; // 新增：滚动文字广告配置
+                                
+                                // 加载滚动文字配置 - 来自index.html
+                                if (adData.marquee) {
+                                    this.config.marquee = { 
+                                        ...this.config.marquee, 
+                                        ...adData.marquee 
+                                    };
+                                }
                                 
                                 // 更新通知配置，包括下载链接
                                 if (adData.notice) {
@@ -1915,14 +1982,14 @@
                     });
                 }
                 
+                // 滚动文字关闭按钮 - 来自index.html
+                this.els.marqueeCloseBtn.onclick = () => {
+                    this.hideMarquee();
+                };
+                
                 this.els.noticeCloseBtn.onclick = () => {
                     this.els.noticeMask.style.display = "none";
                     this.showInterstitial(1);
-                };
-                
-                // 新增：滚动文字广告关闭按钮事件
-                this.els.marqueeCloseBtn.onclick = () => {
-                    this.els.marqueeAd.style.display = 'none';
                 };
                 
                 this.els.nextBtn.onclick = () => {
