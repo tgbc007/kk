@@ -1,4 +1,19 @@
 {
+  "marquee": {
+    "enable": true,
+    "text": "🎉官方APP已上线！几千部高清影片随意观看！若网站显示不全，点击下载官方APP享高清流畅观影体验！ 🎉",
+    "speed": "normal",
+    "direction": "left",
+    "backgroundColor": "rgba(22, 93, 255, 0.1)",
+    "textColor": "#FFFFFF",
+    "fontSize": "14px",
+    "fontWeight": "500",
+    "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.2.apk",
+    "showCloseButton": true,
+    "autoHide": false,
+    "hideAfter": 10,
+    "repeat": true
+  },
   "preAdImageSources": [
     "https://gitee.com/t-bg/kk/raw/master/tptp.jpg"
   ],
@@ -42,3 +57,4 @@
   }
 
 }
+
