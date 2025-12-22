@@ -8,7 +8,7 @@
     "textColor": "#FFFFFF",
     "fontSize": "14px",
     "fontWeight": "500",
-    "linkUrl": "https://gh-proxy.org/https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk",
     "showCloseButton": true,
     "autoHide": false,
     "hideAfter": 10,
@@ -31,7 +31,7 @@
     "skipTime": 5
   },
   "interstitialAds": [
-    { "imgUrl": "cptp2.jpg", "linkUrl": "https://gh-proxy.org/https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk" },
+    { "imgUrl": "cptp2.jpg", "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk" },
     { "imgUrl": "开元插屏.jpg", "linkUrl": "https://K3201.CC" },
     { "imgUrl": "cptp1.png", "linkUrl": "https://K3201.CC" }
   ],
@@ -41,7 +41,7 @@
   },
   "floatAd": {
     "imgUrl": "官方app.jpg",
-    "linkUrl": "https://gh-proxy.org/https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk",
     "text": "强烈推荐"
   },
   "notice": {
@@ -59,6 +59,7 @@
     }
   }
 }
+
 
 
 
