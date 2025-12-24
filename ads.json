@@ -1,7 +1,7 @@
 {
   "marquee": {
     "enable": true,
-    "text": "🎉本站影片永久免费，持续更新。适合成年人释放压力，未满18岁禁止下载使用。 🎉",
+    "text": "🎉本站影片永久免费，持续更新，未满18岁禁止下载使用。若界面显示异常请到wacb.top下载最新版。 🎉",
     "speed": "normal",
     "direction": "left",
     "backgroundColor": "rgba(22, 93, 255, 0.1)",
@@ -46,7 +46,7 @@
   "notice": {
     "enable": true,
     "title": "公告",
-    "content": "本软件永久免费！未满18岁请自觉离开！<br>众人拾柴火焰高，请不要吝啬你们的分享！<br>你们的分享决定了我们能坚持多久！<br>官网：wacb.top (我爱CB)！<br>问题反馈QQ：1519066402",
+    "content": "本软件永久免费！未满18岁请自觉离开！<br>众人拾柴火焰高，请不要吝啬你们的分享！<br>你们的分享决定了我们能坚持多久！<br>官网：wacb.top (我爱CB)！",
     "style": {
       "background": "#FF6B6B",
       "color": "#FFFFFF",
@@ -57,6 +57,7 @@
   }
 
 }
+
 
 
 
