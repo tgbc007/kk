@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>挖呀挖</title>
+    <title>挖呀挖-你的随身片库</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.14/dist/hls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.css">
@@ -25,28 +25,94 @@
             -webkit-tap-highlight-color: transparent;
             -webkit-text-size-adjust: 100%;
         }
-        
-        /* 滚动文字公告样式 - 来自index.html */
-        .marquee-container {
+        .pc-vertical-container {
             width: 100%;
+            height: 100%;
+        }
+        .app-wrapper {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            overflow: hidden;
+            position: relative;
+        }
+        @media (min-width: 1024px) {
+            .pc-vertical-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100vw;
+                height: 100vh;
+            }
+            .app-wrapper {
+                width: min(100vh * 9 / 16, 600px);
+                height: min(100vw * 16 / 9, 1067px);
+                aspect-ratio: 9/16 !important;
+                position: relative;
+            }
+            /* PC端底部横幅广告样式 - 向上移动10px */
+            .bottom-banner-ad {
+                position: absolute !important;
+                bottom: 20px !important; /* 向上移动10px，从10px改为20px */
+                left: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                padding-top: 12.5% !important; /* 保持比例 */
+                z-index: 99998 !important; /* 提高z-index覆盖其他组件 */
+            }
+            /* PC端分页容器样式 - 确保在竖屏窗口内 */
+            .pagination-container {
+                position: absolute !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 40px !important;
+                z-index: 99997 !important;
+                transform: none !important;
+                background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%) !important;
+                border-top: 1px solid rgba(255,255,255,0.1) !important;
+            }
+            .floatAd {
+                position: absolute !important;
+                top: calc(20% + 30px) !important; /* 向下移动30px */
+                right: 15px !important;
+                width: 50px !important;
+            }
+        }
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding-bottom: 40px; /* 为分页容器留出空间 */
+        }
+        
+        /* 滚动文字公告样式 */
+        .marquee-container {
+            width: calc(100% - 20px);
+            margin: 3px auto; /* 减少上下边距为3px */
             background: rgba(22, 93, 255, 0.1);
             color: #FFFFFF;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             overflow: hidden;
             position: relative;
             z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            display: none; /* 默认隐藏，通过配置控制显示 */
+            border-radius: 6px;
+            display: none;
             flex-shrink: 0;
+            height: 28px;
+            border: 1px solid rgba(22, 93, 255, 0.2);
         }
         
         .marquee-content {
             display: flex;
             align-items: center;
-            padding: 8px 0;
+            padding: 6px 0;
             white-space: nowrap;
             animation: marquee 20s linear infinite;
+            height: 100%;
         }
         
         .marquee-content:hover {
@@ -68,7 +134,7 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
         }
         
@@ -77,22 +143,22 @@
         }
         
         .marquee-icon {
-            margin-right: 8px;
-            font-size: 16px;
+            margin-right: 6px;
+            font-size: 14px;
         }
         
         .marquee-close {
             position: absolute;
-            right: 10px;
+            right: 6px;
             top: 50%;
             transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.1);
             border: none;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             color: #fff;
-            font-size: 12px;
+            font-size: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -104,187 +170,7 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        /* 电脑端竖屏容器 - 优化 */
-        .pc-vertical-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: #000;
-        }
-        
-        /* 应用包装器 - 移动端全屏，电脑端竖屏居中 */
-        .app-wrapper {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
-            border-radius: 0;
-            box-shadow: none;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        /* 电脑端特定样式 - 优化 */
-        @media (min-width: 1024px) {
-            body {
-                background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                overflow: auto;
-                padding: 20px;
-            }
-            .pc-vertical-container {
-                width: min(90vh * 9 / 16, 450px);
-                height: min(90vw * 16 / 9, 800px);
-                max-width: 450px;
-                max-height: 800px;
-                aspect-ratio: 9/16;
-                border-radius: 20px;
-                box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), 
-                            0 10px 40px rgba(22, 93, 255, 0.1),
-                            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                overflow: hidden;
-                position: relative;
-                background: #000;
-            }
-            .app-wrapper {
-                width: 100%;
-                height: 100%;
-                border-radius: 20px;
-                overflow: hidden;
-                position: relative;
-            }
-            /* 模拟手机状态栏 */
-            .app-wrapper::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 30px;
-                background: linear-gradient(180deg, #000 0%, #121212 100%);
-                z-index: 1000;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                border-radius: 20px 20px 0 0;
-            }
-            /* 模拟手机底部条 */
-            .app-wrapper::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 40px;
-                background: linear-gradient(0deg, #000 0%, #121212 100%);
-                z-index: 999;
-                border-top: 1px solid rgba(255, 255, 255, 0.05);
-                border-radius: 0 0 20px 20px;
-            }
-            /* 调整滚动文字公告位置 */
-            .marquee-container {
-                border-radius: 8px 8px 0 0;
-                margin: 35px 10px 0;
-                width: calc(100% - 20px);
-            }
-            /* 调整底部横幅广告位置 */
-            .bottom-banner-ad {
-                position: absolute !important;
-                bottom: 60px !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: auto !important;
-                padding-top: 15% !important;
-                background: #000 !important;
-                border-top: 1px solid rgba(255, 255, 255, 0.05);
-            }
-            /* 调整悬浮广告位置 */
-            .floatAd {
-                position: absolute !important;
-                top: 50px !important;
-                right: 10px !important;
-                width: 60px !important;
-                z-index: 9999 !important;
-                border-radius: 8px !important;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6) !important;
-            }
-            /* 调整底部按钮容器 */
-            .bottom-buttons-container {
-                position: absolute !important;
-                bottom: 40px !important;
-                left: 0 !important;
-                width: 100% !important;
-                padding: 0 10px !important;
-                z-index: 1000 !important;
-            }
-            /* 调整插屏广告样式 */
-            .interstitial-ad {
-                width: 85% !important;
-                max-width: 350px !important;
-                aspect-ratio: 3/4 !important;
-                border-radius: 15px !important;
-                box-shadow: 0 0 40px rgba(0, 0, 0, 0.4) !important;
-            }
-            /* 调整轮播广告 */
-            .adSwipebox {
-                margin-top: 5px !important;
-                border-radius: 10px !important;
-            }
-            /* 调整播放器区域 */
-            .player-area {
-                margin-top: 10px !important;
-                border-radius: 10px !important;
-            }
-            /* 调整播放列表区域 */
-            .playlist-wrap {
-                margin: 10px !important;
-                border-radius: 10px !important;
-            }
-            /* 调整分页区域 */
-            .pagination {
-                margin: 0 10px 10px !important;
-                border-radius: 10px !important;
-            }
-        }
-        
-        /* 移动端优化 */
-        @media (max-width: 768px) {
-            .marquee-container {
-                font-size: 12px;
-                padding: 6px 0;
-            }
-            .marquee-content {
-                animation: marquee 15s linear infinite;
-            }
-            .player-area {
-                height: 30vh !important;
-            }
-            .playlist-item {
-                padding: 8px 10px;
-                font-size: 15px;
-            }
-            .func-btn.next,
-            .func-btn.current-play {
-                padding: 14px 0;
-                font-size: 16px;
-            }
-            .bottom-buttons-container {
-                padding: 4px 12px 12px;
-                gap: 10px;
-            }
-        }
-        
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: calc(12.5% + env(safe-area-inset-bottom) + 8px);
-        }
-        
+        /* 加载屏幕 */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -306,46 +192,6 @@
             object-fit: fill !important;
         }
         
-        .splash-ad {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 999999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .splash-ad img {
-            width: 100%;
-            height: 100%;
-            object-fit: fill !important;
-        }
-        
-        .splash-ad-skip {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 16px;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            pointer-events: auto;
-            transition: background-color 0.2s;
-        }
-        
-        .splash-ad-skip:hover,
-        .splash-ad-skip:active {
-            background: rgba(0,0,0,0.9);
-        }
-        
         .notice-mask {
             position: fixed;
             top: 0;
@@ -359,7 +205,6 @@
             justify-content: center;
             padding: 20px;
         }
-        
         .notice-container {
             width: 90%;
             max-width: 500px;
@@ -369,7 +214,6 @@
             box-shadow: 0 0 30px rgba(22, 93, 255, 0.3);
             border: 1px solid rgba(22, 93, 255, 0.2);
         }
-        
         .notice-title {
             font-size: 18px;
             font-weight: 600;
@@ -377,7 +221,6 @@
             margin-bottom: 16px;
             text-align: center;
         }
-        
         .notice-content {
             font-size: 14px;
             line-height: 1.6;
@@ -387,19 +230,70 @@
             white-space: pre-line;
             word-wrap: break-word;
         }
-        
+        /* 公告下载按钮容器 */
+        .notice-download-container {
+            margin: 15px 0;
+            text-align: center;
+        }
+        /* 公告下载按钮样式 */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #FF7D00 0%, #E06A00 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(255, 125, 0, 0.3);
+            min-width: 160px;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 125, 0, 0.4);
+            background: linear-gradient(90deg, #E06A00 0%, #C95A00 100%);
+        }
+        .download-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(255, 125, 0, 0.3);
+        }
+        .download-icon {
+            font-size: 16px;
+        }
+        .download-btn.small {
+            padding: 8px 16px;
+            font-size: 12px;
+            min-width: 120px;
+        }
+        .download-btn.large {
+            padding: 12px 24px;
+            font-size: 16px;
+            min-width: 180px;
+        }
+        .download-btn.secondary {
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            box-shadow: 0 2px 8px rgba(22, 93, 255, 0.3);
+        }
+        .download-btn.secondary:hover {
+            background: linear-gradient(90deg, #0E4BD8 0%, #0A3DB0 100%);
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.4);
+        }
         .notice-footer {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             gap: 12px;
         }
-        
         .notice-countdown {
             font-size: 13px;
             color: #999;
         }
-        
         .notice-close-btn {
             padding: 8px 20px;
             background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
@@ -410,52 +304,16 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        
         .notice-close-btn:disabled {
             background: #333;
             color: #666;
             cursor: not-allowed;
         }
         
-        /* 新增下载按钮样式 */
-        .notice-download-btn {
-            padding: 8px 20px;
-            background: linear-gradient(90deg, #00B578 0%, #00915e 100%);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .notice-download-btn:hover {
-            background: linear-gradient(90deg, #00a76a 0%, #008551 100%);
-            transform: translateY(-1px);
-        }
-        
-        .notice-download-btn:active {
-            transform: translateY(0);
-        }
-        
-        .notice-download-btn:disabled {
-            background: #333;
-            color: #666;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .notice-download-btn::before {
-            content: "↓";
-            font-size: 16px;
-        }
-        
+        /* 广告轮播区域 */
         .adSwipebox {
             width: calc(100% - 20px);
-            margin: 10px auto;
+            margin: 3px auto; /* 减少上下边距为3px */
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0,0,0,0.3);
@@ -464,7 +322,6 @@
             position: relative;
             background: #000;
         }
-        
         .adSwipebox .swiper-container, 
         .adSwipebox .swiper-wrapper, 
         .adSwipebox .swiper-slide {
@@ -472,35 +329,285 @@
             height: 100% !important;
             flex-shrink: 0 !important;
         }
-        
         .adSwipebox .swiper-slide {
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
-        
         .adSwipebox img {
             width: 100% !important;
             height: 100% !important;
             object-fit: fill !important;
         }
         
-        .bottom-banner-ad {
-            position: fixed;
-            bottom: 20px;
+        /* 播放器区域 */
+        .player-wrapper {
+            width: calc(100% - 20px);
+            margin: 3px auto; /* 减少上下边距为3px */
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            height: auto;
+            position: relative;
+        }
+        
+        /* 播放器主容器 - 缩小到80% */
+        .player-main-container {
+            position: relative;
+            height: 0;
+            padding-bottom: 45%; /* 56.25% * 0.8 = 45% (保持16:9比例但宽度为80%) */
+            background: #000;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 1px solid #222;
+            z-index: 999;
+            overflow: hidden;
+            width: 80%; /* 宽度缩小到80% */
+        }
+        
+        /* 播放器区域 */
+        .player-area {
+            position: absolute;
+            top: 0;
             left: 0;
             width: 100%;
-            padding-top: 12.5%;
-            height: auto !important;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #player {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            -webkit-fullscreen: portrait;
+            x-webkit-airplay: allow;
+            x5-video-player-type: h5;
+            x5-video-player-fullscreen: true;
+            x5-video-orientation: landscape;
+            playsinline: true;
+            webkit-playsinline: true;
+        }
+        
+        /* 全屏时的样式 */
+        #player:-webkit-full-screen {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
             background: #000;
-            z-index: 99990;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.6);
+        }
+        
+        #player:-moz-full-screen {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            background: #000;
+        }
+        
+        #player:-ms-fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            background: #000;
+        }
+        
+        #player:fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            background: #000;
+        }
+        
+        #player::-webkit-media-controls-download-button {
+            display: none !important;
+        }
+        #player::-webkit-media-controls {
             overflow: hidden !important;
-            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .core-control-bar {
             display: none;
         }
         
+        /* 播放器右侧按钮容器 */
+        .player-right-buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 18%; /* 占据剩余20%宽度的一部分 */
+            margin-left: 2%; /* 播放器与按钮之间的间距 */
+            height: 45vw * 0.8; /* 与播放器高度一致 */
+        }
+        
+        /* 右侧正方形按钮 */
+        .player-right-btn {
+            width: 100%;
+            aspect-ratio: 1/1; /* 正方形 */
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4px;
+            line-height: 1.2;
+            white-space: normal;
+            word-break: break-all;
+            transition: all 0.2s;
+        }
+        
+        .player-right-btn.current-play {
+            background: linear-gradient(90deg, #FF7D00 0%, #E06A00 100%);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255, 125, 0, 0.3);
+            margin-bottom: 3px; /* 按钮之间的间距减少为3px */
+        }
+        
+        .player-right-btn.next-video {
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(22, 93, 255, 0.3);
+        }
+        
+        .player-right-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* 6个按钮区域 */
+        .tab-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            width: calc(100% - 20px);
+            margin: 3px 10px; /* 减少上下边距为3px */
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            gap: 6px;
+        }
+        .tab-btn {
+            flex: 1 0 calc(33.333% - 4px);
+            min-width: calc(33.333% - 4px);
+            max-width: calc(33.333% - 4px);
+            height: 32px;
+            padding: 0 4px;
+            background: #FFB74D;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tab-btn:hover {
+            background: #FFA726;
+        }
+        .tab-btn.active {
+            background: linear-gradient(90deg, #FF7D00 0%, #E06A00 100%);
+            color: #fff;
+            border: 1px solid #165DFF;
+            box-shadow: 0 1px 4px rgba(22, 93, 255, 0.3), 0 0 0 1px #165DFF inset;
+            transform: translateY(-1px);
+        }
+        
+        /* 播放列表区域 - 与分页容器相连 */
+        .playlist-wrap {
+            flex-grow: 1;
+            width: calc(100% - 20px);
+            margin: 3px 10px 0; /* 上边距减少为3px，下边距为0 */
+            background: #1e1e1e;
+            border-radius: 8px 8px 0 0; /* 上圆角，下直角与分页容器相连 */
+            padding: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            min-height: 0;
+            flex: 1;
+        }
+        .playlist-wrap.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        /* 移除原播放列表标题样式 */
+        .playlist-header {
+            display: none;
+        }
+        .playlist-title, .playlist-count {
+            display: none;
+        }
+        /* 播放列表项 */
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 4px 6px;
+            margin-bottom: 3px; /* 减少项间距离为3px */
+            background: #252525;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            min-height: 36px;
+        }
+        .playlist-item:hover {
+            background: #2d2d2d;
+            transform: translateX(3px);
+        }
+        .playlist-item .item-index {
+            margin-right: 8px;
+            color: #FF0000;
+            min-width: 18px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .playlist-item .item-name {
+            flex: 1;
+            color: #f5f5f5;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .playlist-item .item-date {
+            color: #FF4D4D;
+            font-size: 10px;
+            margin-left: 6px;
+            white-space: nowrap;
+        }
+        .playlist-item.item-active {
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            color: #fff;
+        }
+        
+        /* 底部横幅广告 - 向上移动10px */
+        .bottom-banner-ad {
+            position: fixed;
+            bottom: 20px; /* 向上移动10px，从10px改为20px */
+            left: 0;
+            width: 100%;
+            padding-top: 12.5%; /* 保持比例 */
+            height: auto !important;
+            background: #000;
+            z-index: 99998; /* 提高z-index覆盖其他组件 */
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.6);
+            overflow: hidden !important;
+            display: none;
+        }
         .bottom-banner-ad a {
             position: absolute;
             top: 0;
@@ -508,13 +615,11 @@
             width: 100%;
             height: 100%;
         }
-        
         .bottom-banner-ad img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
         .banner-close-btn {
             position: absolute;
             top: 4px;
@@ -531,10 +636,210 @@
             align-items: center;
             justify-content: center;
             line-height: 1;
-            z-index: 99991 !important;
+            z-index: 99999 !important;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
         }
         
+        /* 分页容器 - 固定在屏幕最下方边缘 */
+        .pagination-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            z-index: 99997; /* 比横幅广告低，比播放列表高 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* 分页按钮样式 */
+        .pagination-btn {
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 0 5px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 70px;
+            box-shadow: 0 2px 5px rgba(22, 93, 255, 0.3);
+        }
+        
+        .pagination-btn:hover {
+            background: linear-gradient(90deg, #0E4BD8 0%, #0A3DB0 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(22, 93, 255, 0.4);
+        }
+        
+        .pagination-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 页码输入框样式 */
+        .page-input-box {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        
+        .page-input-box span {
+            font-size: 12px;
+            color: #fff;
+            margin-right: 5px;
+            font-weight: 500;
+        }
+        
+        #pageInput {
+            width: 60px;
+            padding: 6px 8px;
+            background: #1e1e1e;
+            color: #fff;
+            border: 2px solid #FF7D00;
+            border-radius: 6px;
+            font-size: 12px;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(255, 125, 0, 0.3);
+        }
+        
+        #pageInput:focus {
+            outline: none;
+            border-color: #FFA726;
+            box-shadow: 0 0 8px rgba(255, 125, 0, 0.5);
+        }
+        
+        /* 其他样式调整 */
+        .loading, .error { 
+            color: #999;
+            padding: 10px;
+            font-size: 12px;
+            text-align: center;
+            background: #252525;
+            border-radius: 6px;
+            margin: 8px;
+        }
+        .error { color: #FF4D4D; }
+        .retry-btn {
+            margin-left: 6px;
+            padding: 3px 6px;
+            font-size: 11px;
+            border: none;
+            border-radius: 3px;
+            background: #165DFF;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        /* 加载进度提示样式 */
+        .loading-progress {
+            color: #999;
+            padding: 8px;
+            font-size: 11px;
+            text-align: center;
+            background: #252525;
+            border-radius: 6px;
+            margin: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .loading-progress .progress-bar {
+            width: 80px;
+            height: 5px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .loading-progress .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        /* 启动图片相关样式 */
+        .splash-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 999999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .splash-ad img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill !important;
+        }
+        .splash-ad-skip {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: background-color 0.2s;
+        }
+        
+        .splash-ad-skip:hover,
+        .splash-ad-skip:active {
+            background: rgba(0,0,0,0.9);
+        }
+        
+        /* 开屏广告相关样式 */
+        .sponsor-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 999999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .sponsor-ad img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill !important;
+        }
+        .sponsor-ad-skip {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            pointer-events: auto;
+        }
         .interstitial-mask {
             position: fixed;
             top: 0;
@@ -546,14 +851,13 @@
             display: none;
             pointer-events: auto;
         }
-        
         .interstitial-ad {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.95);
             background: transparent;
-            border-radius: 12px;
+            border-radius: 10px;
             border: none;
             z-index: 99998;
             display: none;
@@ -561,37 +865,34 @@
             justify-content: center;
             width: 80%;
             max-width: 400px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            box-shadow: none;
             aspect-ratio: 3/4;
             overflow: visible !important;
             opacity: 0;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        
         .interstitial-ad.show {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
-        
         .interstitial-ad img {
             width: 100%;
             height: 100%;
             object-fit: fill !important;
-            border-radius: 10px;
+            border-radius: 8px;
         }
-        
         .interstitial-ad-close {
             position: absolute;
-            bottom: -35px !important;
+            bottom: -30px !important;
             left: 50%;
             transform: translateX(-50%);
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background: #FF4D4D;
             color: #fff;
             border: none;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -599,56 +900,51 @@
             line-height: 1;
             z-index: 99999 !important;
         }
-        
         .floatAd {
             position: fixed;
-            top: 160px;
-            right: 10px;
+            top: 170px; /* 向下移动30px，从140px改为170px */
+            right: 8px;
             z-index: 9999;
-            width: 75px;
-            border-radius: 10px;
+            width: 65px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.6);
             background: #000;
             pointer-events: auto !important;
             display: none;
         }
-        
         .floatAd img {
             width: 100%;
             height: 100%;
             object-fit: fill !important;
             display: block;
         }
-        
         .floatAd .fontDiv {
             width: 100%;
-            height: 20px;
-            line-height: 20px;
+            height: 18px;
+            line-height: 18px;
             text-align: center;
             background: rgba(0,0,0,0.8);
             color: #ff0000;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
         }
-        
         .floatAd-close {
             position: absolute;
-            top: 3px;
-            right: 3px;
-            width: 18px !important;
-            height: 18px !important;
+            top: 2px;
+            right: 2px;
+            width: 16px !important;
+            height: 16px !important;
             background: transparent !important;
             color: #fff !important;
             border: 1px solid rgba(255,255,255,0.6) !important;
             border-radius: 50%;
-            font-size: 12px !important;
-            line-height: 18px;
+            font-size: 11px !important;
+            line-height: 16px;
             text-align: center;
             cursor: pointer;
             z-index: 10000 !important;
         }
-        
         .preAdContainer {
             position: absolute;
             top: 0;
@@ -662,7 +958,6 @@
             justify-content: center;
             overflow: hidden;
         }
-        
         #adImage {
             pointer-events: none;
             width: 100%;
@@ -670,359 +965,32 @@
             object-fit: fill !important;
             display: block;
         }
-        
         .adControlBar {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
+            bottom: 10px;
+            right: 10px;
             z-index: 10000;
         }
-        
         .adSkipBtn {
-            padding: 6px 16px;
-            font-size: 14px;
+            padding: 5px 12px;
+            font-size: 12px;
             background: rgba(0,0,0,0.9);
             color: #fff;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             cursor: pointer;
         }
         
-        .player-area {
-            width: auto !important;
-            height: 24vh !important;
-            aspect-ratio: 16/9 !important;
-            margin: 0 auto !important;
-            background: #000;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            border: 1px solid #222;
-            z-index: 999;
-        }
-        
-        #player {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-            controlsList: nodownload noremoteplayback !important;
-            -webkit-controlsList: nodownload noremoteplayback !important;
-        }
-        
-        #player::-webkit-media-controls-download-button {
-            display: none !important;
-        }
-        
-        #player::-webkit-media-controls {
-            overflow: hidden !important;
-        }
-        
-        .core-control-bar {
-            display: none;
-        }
-        
-        .playlist-wrap {
-            flex-grow: 1;
-            width: calc(100% - 20px);
-            margin: 0 10px;
-            background: #1e1e1e;
-            border-radius: 12px;
-            padding: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .playlist-wrap.disabled {
-            pointer-events: none;
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .playlist-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #2d2d2d;
-        }
-        
-        .playlist-title { 
-            font-size: 16px;
-            font-weight: 600;
-            color: #f5f5f5;
-        }
-        
-        .playlist-count { 
-            font-size: 12px;
-            color: #999;
-        }
-        
-        .playlist-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 6px 8px;
-            margin-bottom: 6px;
-            background: #252525;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            min-height: 44px;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
-        }
-        
-        .playlist-item:hover {
-            background: #2d2d2d;
-            transform: translateX(4px);
-        }
-        
-        .playlist-item:active {
-            background: #2d2d2d;
-            transform: translateX(2px);
-        }
-        
-        .playlist-item .item-index {
-            margin-right: 12px;
-            color: #888;
-            min-width: 22px;
-            font-size: 13px;
-            padding-top: 1px;
-        }
-        
-        .playlist-item .item-name {
-            flex: 1;
-            color: #f5f5f5;
-            line-height: 1.3;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-        
-        .playlist-item .item-date {
-            color: #FF4D4D;
-            font-size: 12px;
-            margin-left: 10px;
-            white-space: nowrap;
-            padding-top: 1px;
-            align-self: flex-start;
-        }
-        
-        .playlist-item.item-active {
-            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
-            color: #fff;
-        }
-        
-        .pagination {
-            padding: 6px 12px;
-            background: #1e1e1e;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            margin: 0 10px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-        }
-        
-        .page-input {
-            width: 45px;
-            padding: 5px;
-            border: 1px solid #333;
-            background: #252525;
-            color: #fff;
-            border-radius: 6px;
-            font-size: 13px;
-            text-align: center;
-        }
-        
-        .page-btn {
-            padding: 5px 12px;
-            border: none;
-            background: #252525;
-            color: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        
+        /* 移除原有的底部按钮容器 */
         .bottom-buttons-container {
-            position: fixed;
-            bottom: env(safe-area-inset-bottom);
-            left: 0;
-            width: 100%;
-            padding: 2px 10px 8px;
-            z-index: 99980;
-            display: flex;
-            gap: 8px;
-        }
-        
-        .func-btn.next {
-            flex: 3;
-            padding: 12px 0;
-            font-size: 16px;
-            font-weight: 600;
-            background: linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(22, 93, 255, 0.3);
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
-        }
-        
-        .func-btn.current-play {
-            flex: 1;
-            padding: 12px 0;
-            font-size: 14px;
-            font-weight: 600;
-            background: linear-gradient(90deg, #FF7D00 0%, #E06A00 100%);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 125, 0, 0.3);
-            white-space: nowrap;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
-        }
-        
-        .loading, .error { 
-            color: #999;
-            padding: 15px;
-            font-size: 13px;
-            text-align: center;
-            background: #252525;
-            border-radius: 8px;
-            margin: 10px;
-        }
-        
-        .error { color: #FF4D4D; }
-        
-        .retry-btn {
-            margin-left: 8px;
-            padding: 4px 8px;
-            font-size: 12px;
-            border: none;
-            border-radius: 4px;
-            background: #165DFF;
-            color: #fff;
-            cursor: pointer;
-        }
-        
-        .exit-confirm-mask {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000002;
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(8px);
-        }
-        
-        .exit-confirm-container {
-            width: 85%;
-            max-width: 320px;
-            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
-            border-radius: 20px;
-            padding: 28px 24px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            animation: exitConfirmAppear 0.3s ease-out;
-        }
-        
-        @keyframes exitConfirmAppear {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .exit-confirm-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 16px;
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: white;
-            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
-        }
-        
-        .exit-confirm-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-        }
-        
-        .exit-confirm-content {
-            font-size: 15px;
-            line-height: 1.5;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 24px;
-        }
-        
-        .exit-confirm-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-        }
-        
-        .exit-confirm-btn {
-            flex: 1;
-            padding: 14px 0;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            letter-spacing: 0.5px;
-        }
-        
-        .exit-confirm-cancel {
-            background: rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.9);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .exit-confirm-cancel:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        }
-        
-        .exit-confirm-ok {
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
-            color: #fff;
-            box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
-        }
-        
-        .exit-confirm-ok:hover {
-            background: linear-gradient(135deg, #FF4757 0%, #FF6B6B 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.4);
         }
     </style>
 </head>
 <body>
     <!-- 启动图片（加载资源时显示） -->
     <div class="loading-screen" id="loadingScreen">
-        <img src="qdtp.gif" 
+        <img src="https://gitee.com/t-bg/kk/raw/master/qdtp.gif" 
              alt="启动图片" 
              style="width:100%;height:100%;object-fit:fill;display:block;">
     </div>
@@ -1032,39 +1000,26 @@
         <!-- 开屏广告内容会动态生成 -->
     </div>
 
-    <!-- 优化后的退出确认对话框 -->
-    <div class="exit-confirm-mask" id="exitConfirmMask">
-        <div class="exit-confirm-container">
-            <div class="exit-confirm-icon">!</div>
-            <div class="exit-confirm-title">确认退出</div>
-            <div class="exit-confirm-content">确定要退出应用吗？</div>
-            <div class="exit-confirm-buttons">
-                <button class="exit-confirm-btn exit-confirm-cancel" id="exitConfirmCancel">取消</button>
-                <button class="exit-confirm-btn exit-confirm-ok" id="exitConfirmOk">确定退出</button>
-            </div>
-        </div>
-    </div>
-
     <div class="notice-mask" id="noticeMask">
         <div class="notice-container">
             <div class="notice-title" id="noticeTitle">系统公告</div>
-            <div class="notice-content" id="noticeContent">访问失败联系QQ：1519066402</div>
+            <div class="notice-content" id="noticeContent">问题反馈QQ:1519066402</div>
+            <!-- 下载按钮容器 -->
+            <div class="notice-download-container" id="noticeDownloadContainer"></div>
             <div class="notice-footer">
                 <span class="notice-countdown" id="noticeCountdown">2秒后可关闭</span>
-                <button class="notice-download-btn" id="noticeDownloadBtn" disabled>下载app</button>
                 <button class="notice-close-btn" id="noticeCloseBtn" disabled>关闭</button>
             </div>
         </div>
     </div>
     
-    <!-- 主应用容器 -->
-    <div class="pc-vertical-container" id="pcVerticalContainer">
+    <div class="pc-vertical-container">
         <div class="app-wrapper">
             <div class="bottom-banner-ad" id="bottomBannerAd">
                 <button class="banner-close-btn" id="bannerCloseBtn">×</button>
             </div>
             <div class="app-container">
-                <!-- 滚动文字公告 - 来自index.html -->
+                <!-- 滚动文字公告 -->
                 <div class="marquee-container" id="marqueeContainer">
                     <div class="marquee-content" id="marqueeContent">
                         <!-- 内容将通过JS动态生成 -->
@@ -1072,6 +1027,10 @@
                     <button class="marquee-close" id="marqueeCloseBtn">×</button>
                 </div>
                 
+                <!-- 开屏广告区域 -->
+                <div class="sponsor-ad" id="sponsorAd">
+                    <!-- 广告内容由JavaScript动态生成 -->
+                </div>
                 <div class="interstitial-mask" id="interstitialMask"></div>
                 <div class="adSwipebox">
                     <div class="swiper-container">
@@ -1079,69 +1038,111 @@
                         <div class="swiper-pagination"></div>
                     </div>
                 </div>
-                <div class="player-area">
-                    <video id="player" controls playsinline webkit-playsinline>
-                        您的浏览器不支持视频播放
-                    </video>
-                    <div class="preAdContainer" id="preAdContainer">
-                        <a id="adLink" href="javascript:void(0)">
-                            <img id="adImage" alt="贴片广告">
-                        </a>
-                        <div class="adControlBar" id="adControlBar">
-                            <button class="adSkipBtn" id="adSkipBtn" disabled>5s后进入</button>
+                
+                <!-- 播放器区域 -->
+                <div class="player-wrapper">
+                    <!-- 播放器主容器 - 80%宽度 -->
+                    <div class="player-main-container">
+                        <div class="player-area">
+                            <video id="player" controls playsinline webkit-playsinline>
+                                您的浏览器不支持视频播放
+                            </video>
+                            <div class="preAdContainer" id="preAdContainer">
+                                <a id="adLink" href="javascript:void(0)">
+                                    <img id="adImage" alt="贴片广告">
+                                </a>
+                                <div class="adControlBar" id="adControlBar">
+                                    <button class="adSkipBtn" id="adSkipBtn" disabled>5s后进入</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="playlist-wrap" id="playlistWrap">
-                    <div class="playlist-header">
-                        <div class="playlist-title">视频播放列表</div>
-                        <div class="playlist-count" id="playlistCount">共 0 个视频</div>
+                    
+                    <!-- 右侧正方形按钮容器 -->
+                    <div class="player-right-buttons">
+                        <button class="player-right-btn current-play" id="currentPlayBtn">正在<br>播放</button>
+                        <button class="player-right-btn next-video" id="nextBtn">下个<br>视频</button>
                     </div>
+                </div>
+                
+                <!-- 6个按钮区域，分为两排 -->
+                <div class="tab-buttons-container" id="tabButtonsContainer">
+                    <button class="tab-btn active" id="tabBtn1" data-tab="playlist">国产传媒</button>
+                    <button class="tab-btn" id="tabBtn2" data-tab="tab2">欧美性爱</button>
+                    <button class="tab-btn" id="tabBtn3" data-tab="tab3">日韩专区</button>
+                    <button class="tab-btn" id="tabBtn4" data-tab="tab4">H动画</button>
+                    <button class="tab-btn" id="tabBtn5" data-tab="tab5">自拍偷拍</button>
+                    <button class="tab-btn" id="tabBtn6" data-tab="tab6">高清无码</button>
+                </div>
+                
+                <div class="playlist-wrap" id="playlistWrap">
                     <div id="playlistContainer"></div>
                 </div>
-                <div class="pagination" id="pagination">
-                    <button class="page-btn" id="prevPage">上一页</button>
-                    <button class="page-btn" id="nextPage">下一页</button>
-                    <span style="font-size: 13px; color: #999;">页码：</span>
-                    <input type="number" class="page-input" id="pageInput" min="1" value="1">
-                    <button class="page-btn" id="jumpPage">跳转</button>
-                </div>
-            </div>
-            <div class="bottom-buttons-container">
-                <button class="func-btn current-play" id="currentPlayBtn">正在播放</button>
-                <button class="func-btn next" id="nextBtn">下一个视频</button>
             </div>
             <div class="floatAd" id="floatAd">
                 <button class="floatAd-close" id="floatAdClose">×</button>
                 <a href="javascript:void(0)">
                     <img src="" alt="悬浮广告">
                 </a>
-                <div class="fontDiv">限时福利</div>
+                <div class="fontDiv">强烈推荐</div>
             </div>
         </div>
     </div>
+    
+    <!-- 分页容器 - 固定在屏幕最下方 -->
+    <div class="pagination-container" id="paginationContainer">
+        <button class="pagination-btn" id="prevPage">上一页</button>
+        <div class="page-input-box">
+            <span>页码:</span>
+            <input type="number" id="pageInput" min="1" value="1">
+        </div>
+        <button class="pagination-btn" id="jumpPage">跳转</button>
+        <button class="pagination-btn" id="nextPage">下一页</button>
+    </div>
+    
     <script>
         const App = {
             config: {
-                TXT_URL_LONG: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-1.txt"),
+                tabUrls: {
+                    playlist: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-gccm.txt"),
+                    tab2: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-omxa.txt"),
+                    tab3: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-rhzq.txt"),
+                    tab4: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-hdh.txt"),
+                    tab5: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-zptp.txt"),
+                    tab6: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/playlist-gqwm.txt")
+                },
                 PAGE_SIZE: 10,
                 currentPage: 1,
-                videoList: [],
-                currentPlayIndex: 0,
+                videoLists: {
+                    playlist: [],
+                    tab2: [],
+                    tab3: [],
+                    tab4: [],
+                    tab5: [],
+                    tab6: []
+                },
+                currentVideoList: [],
+                currentPlayIndex: -1, // 修改：初始值设为-1，表示没有选中任何项
                 isLoading: false,
                 hls: null,
                 currentInterstitial: 0,
                 isInterstitialShowing: false,
                 adPlayCount: 0,
                 preAdPlaying: false,
-                GITEE_AD_CONFIG_URL: "https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/ads1.json",
+                AD_CONFIG_URL: "https://allorigins.hexlet.app/get?url=" + encodeURIComponent("https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/ads1.json"),
                 notice: {
                     enable: true,
                     title: "系统公告",
-                    content: "若访问失败联系QQ：1519066402",
-                    downloadUrl: "" // 新增：下载按钮链接
+                    content: "问题反馈QQ:1519066402",
+                    downloadButton: { // 新增：下载按钮默认配置
+                        enable: false,
+                        text: "点击下载APP",
+                        url: "#",
+                        color: "#fff",
+                        backgroundColor: "linear-gradient(90deg, #FF7D00 0%, #E06A00 100%)",
+                        size: "medium"
+                    }
                 },
-                // 滚动文字配置 - 来自index.html
                 marquee: {
                     enable: false,
                     text: "",
@@ -1149,7 +1150,7 @@
                     direction: "left",
                     backgroundColor: "rgba(22, 93, 255, 0.1)",
                     textColor: "#FFFFFF",
-                    fontSize: "14px",
+                    fontSize: "12px",
                     fontWeight: "500",
                     linkUrl: "",
                     showCloseButton: true,
@@ -1161,24 +1162,36 @@
                 preAdLinkUrls: [],
                 preAdSkipTime: 3,
                 bannerAds: [],
-                sponsorAd: { imgUrl: "", linkUrl: "", skipTime: 5 }, // 开屏广告倒计时改为5秒
+                sponsorAd: { imgUrl: "", linkUrl: "", skipTime: 5 },
                 interstitialAds: [],
                 bottomBannerAd: { imgUrl: "", linkUrl: "" },
-                floatAd: { imgUrl: "", linkUrl: "", text: "限时福利" },
+                floatAd: { imgUrl: "", linkUrl: "", text: "强烈推荐" },
                 adConfigLoaded: false,
+                loadTimeout: null,
+                loadTimeoutDuration: 10000,
+                currentTab: 'playlist',
+                splashTimer: null,
+                loadingStatus: {
+                    total: 6,
+                    loaded: 0,
+                    failed: 0
+                },
                 hasShownSplashAd: false,
-                splashAdTimer: null, // 开屏广告计时器
-                loadingTimer: null,  // 启动图片关闭计时器
-                splashAdCountdown: 5, // 开屏广告倒计时时间
-                splashAdSkippable: true // 开屏广告是否可跳过
+                loadingTimer: null,
+                adTimer: null,
+                updateData: null,
+                // 新增：记录当前正在播放的视频信息
+                currentPlayingVideo: {
+                    tab: null,    // 当前播放的视频所属的标签
+                    index: -1,    // 当前播放的视频在对应标签列表中的索引
+                    page: 1       // 当前播放的视频所在页码
+                }
             },
             els: {
                 loadingScreen: document.getElementById("loadingScreen"),
                 splashAd: document.getElementById("splashAd"),
-                pcVerticalContainer: document.getElementById("pcVerticalContainer"),
                 player: document.getElementById("player"),
                 playlistContainer: document.getElementById("playlistContainer"),
-                playlistCount: document.getElementById("playlistCount"),
                 playlistWrap: document.getElementById("playlistWrap"),
                 nextBtn: document.getElementById("nextBtn"),
                 prevPageBtn: document.getElementById("prevPage"),
@@ -1194,6 +1207,7 @@
                 adSkipBtn: document.getElementById("adSkipBtn"),
                 floatAdClose: document.getElementById("floatAdClose"),
                 bannerSwiperWrapper: document.getElementById("bannerSwiperWrapper"),
+                sponsorAd: document.getElementById("sponsorAd"),
                 bottomBannerAd: document.getElementById("bottomBannerAd"),
                 floatAd: document.getElementById("floatAd"),
                 bannerCloseBtn: document.getElementById("bannerCloseBtn"),
@@ -1202,80 +1216,90 @@
                 noticeContent: document.getElementById("noticeContent"),
                 noticeCountdown: document.getElementById("noticeCountdown"),
                 noticeCloseBtn: document.getElementById("noticeCloseBtn"),
-                noticeDownloadBtn: document.getElementById("noticeDownloadBtn"), // 新增：下载按钮
-                exitConfirmMask: document.getElementById("exitConfirmMask"),
-                exitConfirmCancel: document.getElementById("exitConfirmCancel"),
-                exitConfirmOk: document.getElementById("exitConfirmOk"),
-                // 滚动文字元素 - 来自index.html
+                tabButtonsContainer: document.getElementById("tabButtonsContainer"),
+                tabBtn1: document.getElementById("tabBtn1"),
+                tabBtn2: document.getElementById("tabBtn2"),
+                tabBtn3: document.getElementById("tabBtn3"),
+                tabBtn4: document.getElementById("tabBtn4"),
+                tabBtn5: document.getElementById("tabBtn5"),
+                tabBtn6: document.getElementById("tabBtn6"),
                 marqueeContainer: document.getElementById("marqueeContainer"),
                 marqueeContent: document.getElementById("marqueeContent"),
-                marqueeCloseBtn: document.getElementById("marqueeCloseBtn")
+                marqueeCloseBtn: document.getElementById("marqueeCloseBtn"),
+                paginationContainer: document.getElementById("paginationContainer"),
+                noticeDownloadContainer: document.getElementById("noticeDownloadContainer") // 新增：下载按钮容器
             },
             init() {
                 console.log("🚀 开始初始化应用...");
                 
                 this.bindEvents();
                 
-                // 初始化应用
-                this.initApp();
+                this.parallelInit();
             },
-            initApp() {
-                console.log("🎯 开始初始化应用功能...");
+            parallelInit() {
+                console.log("🔄 开始并行加载...");
+                
+                this.config.loadTimeout = setTimeout(() => {
+                    if (!this.config.adConfigLoaded) {
+                        console.warn("⚠️ 加载超时，显示失败提示");
+                        this.showLoadFail();
+                    }
+                }, this.config.loadTimeoutDuration);
 
-                // 先加载广告配置
-                this.loadAdConfigFromGitee().then(() => {
-                    console.log("✅ 广告配置加载完成");
-                    // 然后加载视频列表
-                    this.loadPlaylist().then(() => {
-                        console.log("✅ 视频列表加载完成");
-                        
-                        // 检查是否有开屏广告
-                        if (this.config.adConfigLoaded && this.config.sponsorAd.imgUrl) {
-                            console.log("✅ 显示开屏广告");
-                            this.showSplashAd();
-                        } else {
-                            console.log("⚠️ 无开屏广告配置，直接进入主界面");
-                            // 没有开屏广告，直接关闭启动图片并显示主界面
-                            this.hideLoadingScreen();
-                            this.showMainApp();
-                        }
-                    }).catch(err => {
-                        console.error("❌ 视频列表加载失败：", err);
-                        this.hideLoadingScreen();
-                        this.showMainApp();
+                const adConfigLoad = this.loadAdConfig();
+                
+                Promise.allSettled([adConfigLoad]).then(results => {
+                    clearTimeout(this.config.loadTimeout);
+                    
+                    const adConfigResult = results[0];
+                    
+                    console.log("✅ 并行加载完成", {
+                        adConfig: adConfigResult.status
                     });
+                    
+                    this.initApp();
+                    
                 }).catch(err => {
-                    console.error("❌ 广告配置加载失败：", err);
-                    // 即使广告配置加载失败，也尝试加载视频列表
-                    this.loadPlaylist().then(() => {
-                        this.hideLoadingScreen();
-                        this.showMainApp();
-                    }).catch(err2 => {
-                        console.error("❌ 视频列表也加载失败：", err2);
-                        this.hideLoadingScreen();
-                        this.showMainApp();
-                    });
+                    console.error("❌ 并行加载失败", err);
+                    clearTimeout(this.config.loadTimeout);
+                    this.initApp();
                 });
             },
+            showLoadFail() {
+                alert("加载失败，请检查网络连接并刷新页面");
+                this.hideLoadingScreen();
+            },
             hideLoadingScreen() {
-                // 添加淡出效果
                 this.els.loadingScreen.style.opacity = '0';
                 setTimeout(() => {
                     this.els.loadingScreen.style.display = 'none';
                 }, 300);
             },
+            initApp() {
+                console.log("🎯 开始初始化应用功能...");
+                
+                if (this.config.loadTimeout) {
+                    clearTimeout(this.config.loadTimeout);
+                }
+
+                if (this.config.adConfigLoaded && this.config.sponsorAd.imgUrl) {
+                    console.log("✅ 显示开屏广告");
+                    this.showSplashAd();
+                } else {
+                    console.log("⚠️ 无开屏广告配置，直接进入主界面");
+                    this.hideLoadingScreen();
+                    this.showMainApp();
+                }
+            },
             showSplashAd() {
-                // 防止重复显示
                 if (this.config.hasShownSplashAd) return;
                 this.config.hasShownSplashAd = true;
                 
                 const { imgUrl, linkUrl, skipTime = 5 } = this.config.sponsorAd;
                 const splashAd = this.els.splashAd;
                 
-                // 清空之前的广告内容
                 splashAd.innerHTML = '';
                 
-                // 创建开屏广告内容
                 const a = document.createElement("a");
                 a.href = "javascript:void(0)";
                 a.onclick = () => {
@@ -1295,19 +1319,15 @@
                 skipBtn.className = "splash-ad-skip";
                 skipBtn.textContent = `${skipTime}秒后跳过`;
                 
-                // 图片加载成功
                 img.onload = () => {
                     console.log("✅ 开屏广告图加载成功");
                     
-                    // 显示开屏广告
                     splashAd.style.display = "flex";
                     
-                    // 组装元素
                     a.appendChild(img);
                     splashAd.appendChild(a);
                     splashAd.appendChild(skipBtn);
                     
-                    // 设置启动图片在2秒后关闭
                     if (this.config.loadingTimer) {
                         clearTimeout(this.config.loadingTimer);
                     }
@@ -1315,14 +1335,11 @@
                         this.hideLoadingScreen();
                     }, 2000);
                     
-                    // 开始开屏广告倒计时
                     this.startSplashAdCountdown(skipBtn, skipTime);
                 };
                 
-                // 图片加载失败
                 img.onerror = () => {
                     console.error("❌ 开屏广告图加载失败，直接进入主界面");
-                    // 清除加载计时器
                     if (this.config.loadingTimer) {
                         clearTimeout(this.config.loadingTimer);
                     }
@@ -1334,12 +1351,10 @@
                 let countdown = skipTime;
                 const self = this;
                 
-                // 设置跳过按钮点击事件 - 随时可以点击跳过
                 skipBtn.onclick = () => {
                     self.closeSplashAd();
                 };
                 
-                // 更新倒计时显示
                 const updateCountdown = () => {
                     skipBtn.textContent = `${countdown}秒后跳过`;
                     countdown--;
@@ -1347,60 +1362,48 @@
                     if (countdown >= 0) {
                         setTimeout(updateCountdown, 1000);
                     } else {
-                        // 倒计时结束，按钮文字改为"跳过"
                         skipBtn.textContent = "跳过";
                     }
                 };
                 
-                // 开始倒计时
                 updateCountdown();
-                
-                // 注意：这里移除了自动关闭的逻辑，开屏广告不会自动关闭
-                // 只有用户点击跳过按钮才会关闭
             },
             closeSplashAd() {
-                // 清除加载计时器
                 if (this.config.loadingTimer) {
                     clearTimeout(this.config.loadingTimer);
                 }
                 
-                // 确保启动图片已关闭
                 this.hideLoadingScreen();
                 
-                // 关闭开屏广告
                 this.els.splashAd.style.display = "none";
                 
-                // 显示主应用界面
                 this.showMainApp();
             },
             showMainApp() {
                 console.log("🎮 显示主应用界面");
                 
-                // 初始化所有广告
+                this.initMarquee();
+                
+                this.loadAllPlaylists();
+                this.initPaginationDisabled();
+                this.els.player.pause();
+                this.els.player.src = "";
+                
                 this.initAllAds();
                 
-                // 显示通知或插屏广告
                 this.handleNoticeAndInterstitial();
             },
             initAllAds() {
                 console.log("🔄 初始化所有广告");
                 
-                // 初始化滚动文字公告 - 来自index.html
-                this.initMarquee();
-                
-                // 初始化插屏广告
                 this.renderInterstitialAds();
                 
-                // 初始化轮播广告
                 this.initAds();
                 
-                // 初始化悬浮广告
                 this.renderFloatAd();
                 
-                // 初始化底部横幅广告
                 this.renderBottomBannerAd();
             },
-            // 初始化滚动文字公告 - 来自index.html
             initMarquee() {
                 const marqueeConfig = this.config.marquee;
                 
@@ -1409,7 +1412,6 @@
                     return;
                 }
                 
-                // 设置容器样式
                 const container = this.els.marqueeContainer;
                 container.style.backgroundColor = marqueeConfig.backgroundColor;
                 container.style.color = marqueeConfig.textColor;
@@ -1417,18 +1419,15 @@
                 container.style.fontWeight = marqueeConfig.fontWeight;
                 container.style.display = "block";
                 
-                // 设置内容
                 const content = this.els.marqueeContent;
                 let marqueeHtml = `<span class="marquee-icon">📢</span> ${marqueeConfig.text}`;
                 
-                // 如果有链接，添加点击跳转
                 if (marqueeConfig.linkUrl) {
                     content.innerHTML = `<a href="javascript:void(0)" onclick="App.openMarqueeLink()">${marqueeHtml}</a>`;
                 } else {
                     content.innerHTML = marqueeHtml;
                 }
                 
-                // 设置动画速度
                 let animationDuration;
                 switch (marqueeConfig.speed) {
                     case 'slow': animationDuration = '30s'; break;
@@ -1436,7 +1435,6 @@
                     default: animationDuration = '20s'; break;
                 }
                 
-                // 设置动画方向
                 let animationName = 'marquee';
                 if (marqueeConfig.direction === 'right') {
                     animationName = 'marquee-right';
@@ -1444,58 +1442,103 @@
                 
                 content.style.animation = `${animationName} ${animationDuration} linear infinite`;
                 
-                // 设置关闭按钮
                 if (marqueeConfig.showCloseButton) {
                     this.els.marqueeCloseBtn.style.display = "block";
                 } else {
                     this.els.marqueeCloseBtn.style.display = "none";
                 }
                 
-                // 自动隐藏
                 if (marqueeConfig.autoHide && marqueeConfig.hideAfter > 0) {
                     setTimeout(() => {
                         this.hideMarquee();
                     }, marqueeConfig.hideAfter * 1000);
                 }
             },
-            // 打开滚动文字链接 - 来自index.html
             openMarqueeLink() {
                 const linkUrl = this.config.marquee.linkUrl;
                 if (linkUrl) {
                     this.openAdLink(linkUrl);
                 }
             },
-            // 隐藏滚动文字 - 来自index.html
             hideMarquee() {
                 this.els.marqueeContainer.style.display = "none";
-                // 如果设置了重复显示，可以在这里设置定时器重新显示
                 if (this.config.marquee.repeat) {
                     setTimeout(() => {
                         this.els.marqueeContainer.style.display = "block";
-                    }, 60000); // 1分钟后重新显示
+                    }, 60000);
                 }
             },
             handleNoticeAndInterstitial() {
-                const { enable, title, content, downloadUrl } = this.config.notice;
+                const { enable, title, content, downloadButton } = this.config.notice;
                 if (enable) {
                     this.els.noticeTitle.textContent = title || "系统公告";
-                    this.els.noticeContent.innerHTML = content || "访问失败联系QQ：1519066402";
+                    this.els.noticeContent.innerHTML = content || "问题反馈QQ:1519066402";
+                    
+                    // 渲染下载按钮
+                    this.renderDownloadButton();
+                    
                     this.els.noticeMask.style.display = "flex";
-                    
-                    // 设置下载按钮
-                    if (downloadUrl) {
-                        this.els.noticeDownloadBtn.style.display = "flex";
-                        this.els.noticeDownloadBtn.onclick = () => {
-                            this.openAdLink(downloadUrl);
-                        };
-                    } else {
-                        this.els.noticeDownloadBtn.style.display = "none";
-                    }
-                    
                     this.startNoticeCountdown();
                 } else {
                     this.showInterstitial(1);
                 }
+            },
+            // 新增：渲染下载按钮函数
+            renderDownloadButton() {
+                const downloadContainer = this.els.noticeDownloadContainer;
+                const { downloadButton } = this.config.notice;
+                
+                // 清空容器
+                downloadContainer.innerHTML = '';
+                
+                // 检查是否启用下载按钮
+                if (!downloadButton || !downloadButton.enable) {
+                    return;
+                }
+                
+                const { 
+                    text = "点击下载", 
+                    url = "#", 
+                    color, 
+                    backgroundColor, 
+                    size = "medium" 
+                } = downloadButton;
+                
+                // 创建下载按钮
+                const downloadBtn = document.createElement('a');
+                downloadBtn.href = url;
+                downloadBtn.target = '_blank';
+                downloadBtn.rel = 'noopener noreferrer';
+                downloadBtn.className = `download-btn ${size}`;
+                downloadBtn.innerHTML = `
+                    <span class="download-icon">⬇️</span>
+                    <span>${text}</span>
+                `;
+                
+                // 应用自定义样式
+                if (color) {
+                    downloadBtn.style.color = color;
+                }
+                
+                if (backgroundColor) {
+                    if (backgroundColor.includes('gradient')) {
+                        downloadBtn.style.background = backgroundColor;
+                    } else {
+                        downloadBtn.style.backgroundColor = backgroundColor;
+                    }
+                }
+                
+                // 添加到容器
+                downloadContainer.appendChild(downloadBtn);
+                
+                // 添加点击事件
+                downloadBtn.onclick = (e) => {
+                    e.preventDefault();
+                    console.log(`下载按钮被点击，跳转到: ${url}`);
+                    if (url && url !== "#") {
+                        window.open(url, '_blank');
+                    }
+                };
             },
             startNoticeCountdown() {
                 let countdown = 2;
@@ -1506,22 +1549,27 @@
                         clearInterval(timer);
                         this.els.noticeCountdown.textContent = "可关闭";
                         this.els.noticeCloseBtn.disabled = false;
-                        this.els.noticeDownloadBtn.disabled = false;
                     }
                 }, 1000);
             },
-            loadAdConfigFromGitee() {
+            loadAdConfig() {
                 return new Promise((resolve, reject) => {
-                    const proxyUrl = "https://allorigins.hexlet.app/get?url=" + encodeURIComponent(this.config.GITEE_AD_CONFIG_URL);
+                    console.log("📥 加载广告配置...");
                     
-                    fetch(proxyUrl)
+                    fetch(this.config.AD_CONFIG_URL)
                         .then(res => {
-                            if (!res.ok) throw new Error(`HTTP状态码：${res.status}`);
+                            if (!res.ok) {
+                                console.warn(`HTTP状态码：${res.status}，使用默认广告配置`);
+                                this.setDefaultAdConfig();
+                                resolve();
+                                return;
+                            }
                             return res.json();
                         })
                         .then(proxyData => {
                             if (!proxyData || !proxyData.contents) {
                                 console.log("广告配置为空，使用默认设置");
+                                this.setDefaultAdConfig();
                                 resolve();
                                 return;
                             }
@@ -1535,9 +1583,8 @@
                                 this.config.sponsorAd = adData.sponsorAd || { imgUrl: "", linkUrl: "", skipTime: 5 };
                                 this.config.interstitialAds = adData.interstitialAds || [];
                                 this.config.bottomBannerAd = adData.bottomBannerAd || { imgUrl: "", linkUrl: "" };
-                                this.config.floatAd = adData.floatAd || { imgUrl: "", linkUrl: "", text: "限时福利" };
+                                this.config.floatAd = adData.floatAd || { imgUrl: "", linkUrl: "", text: "强烈推荐" };
                                 
-                                // 加载滚动文字配置 - 来自index.html
                                 if (adData.marquee) {
                                     this.config.marquee = { 
                                         ...this.config.marquee, 
@@ -1545,12 +1592,18 @@
                                     };
                                 }
                                 
-                                // 更新通知配置，包括下载链接
                                 if (adData.notice) {
                                     this.config.notice = { 
                                         ...this.config.notice, 
                                         ...adData.notice 
                                     };
+                                    // 新增：合并下载按钮配置
+                                    if (adData.notice.downloadButton) {
+                                        this.config.notice.downloadButton = {
+                                            ...this.config.notice.downloadButton,
+                                            ...adData.notice.downloadButton
+                                        };
+                                    }
                                 }
                                 
                                 this.config.adConfigLoaded = true;
@@ -1558,27 +1611,65 @@
                                 resolve();
                             } catch (parseErr) {
                                 console.error("解析广告配置失败：", parseErr);
+                                this.setDefaultAdConfig();
                                 resolve();
                             }
                         })
                         .catch(err => {
                             console.error("❌ ads.json加载失败：", err.message);
+                            this.setDefaultAdConfig();
                             resolve();
                         });
                 });
             },
+            setDefaultAdConfig() {
+                console.log("⚠️ 使用默认广告配置");
+                this.config.adConfigLoaded = true;
+                this.config.preAdImageSources = [];
+                this.config.preAdLinkUrls = [];
+                this.config.bannerAds = [];
+                this.config.interstitialAds = [];
+                this.config.bottomBannerAd = { imgUrl: "", linkUrl: "" };
+                this.config.floatAd = { imgUrl: "", linkUrl: "", text: "强烈推荐" };
+                // 注意：保留默认的notice配置
+            },
+            // 修改：跳转到当前播放的视频
             scrollToCurrentPlay() {
-                if (!this.config.videoList.length) return;
-                const currentIndex = this.config.currentPlayIndex;
-                const targetPage = Math.ceil((currentIndex + 1) / this.config.PAGE_SIZE);
-                if (targetPage !== this.config.currentPage) {
+                // 如果没有正在播放的视频，直接返回
+                if (!this.config.currentPlayingVideo.tab || this.config.currentPlayingVideo.index === -1) {
+                    console.log("没有正在播放的视频");
+                    return;
+                }
+                
+                const { tab, index } = this.config.currentPlayingVideo;
+                
+                // 如果当前标签不是正在播放视频的标签，先切换到对应的标签
+                if (this.config.currentTab !== tab) {
+                    this.switchTab(tab);
+                }
+                
+                // 计算当前播放视频所在的页码
+                const targetPage = Math.ceil((index + 1) / this.config.PAGE_SIZE);
+                
+                // 如果当前页码不是目标页码，跳转到目标页码
+                if (this.config.currentPage !== targetPage) {
                     this.config.currentPage = targetPage;
                     this.renderPlaylist();
                     this.initPaginationDisabled();
                 }
+                
+                // 更新当前播放索引
+                this.config.currentPlayIndex = index;
+                
+                // 重新渲染播放列表，确保当前播放项被高亮
+                this.renderPlaylist();
+                
+                // 滚动到当前播放项
                 setTimeout(() => {
                     const activeItem = document.querySelector(".playlist-item.item-active");
-                    if (activeItem) activeItem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    if (activeItem) {
+                        activeItem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    }
                 }, 100);
             },
             renderInterstitialAds() {
@@ -1657,7 +1748,7 @@
                 bottomBanner.style.display = "block";
             },
             renderFloatAd() {
-                const { imgUrl, linkUrl, text = "限时福利" } = this.config.floatAd;
+                const { imgUrl, linkUrl, text = "强烈推荐" } = this.config.floatAd;
                 const floatAd = this.els.floatAd;
                 const a = floatAd.querySelector("a");
                 const img = floatAd.querySelector("img");
@@ -1732,69 +1823,171 @@
             },
             openAdLink(url) {
                 if (!url || url === "#") return;
+                window.open(url, '_blank');
+            },
+            switchTab(tabName) {
+                // 停止当前播放的视频
+                this.stopCurrentVideo();
                 
-                if (window.plus) {
-                    plus.runtime.openURL(url, function(e) {
-                        console.error('打开广告链接失败: ' + e.message);
-                    });
+                this.config.currentTab = tabName;
+                
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                }
+                
+                this.config.currentVideoList = this.config.videoLists[tabName] || [];
+                this.config.currentPage = 1;
+                // 修改：切换列表时不设置currentPlayIndex，保持为-1
+                this.config.currentPlayIndex = -1;
+                
+                if (this.config.currentVideoList.length > 0) {
+                    this.renderPlaylist();
+                    this.initPaginationDisabled();
                 } else {
-                    window.open(url, '_blank');
+                    this.els.playlistContainer.innerHTML = '<div class="loading">正在加载视频列表...</div>';
+                    
+                    this.loadPlaylistForTab(tabName);
                 }
             },
-            async loadPlaylist() {
-                return new Promise(async (resolve, reject) => {
-                    if (this.config.isLoading) {
-                        resolve();
-                        return;
+            loadAllPlaylists() {
+                console.log("📥 开始同时加载所有播放列表...");
+                
+                this.config.loadingStatus = {
+                    total: 6,
+                    loaded: 0,
+                    failed: 0
+                };
+                
+                this.showLoadingProgress();
+                
+                const tabKeys = Object.keys(this.config.tabUrls);
+                
+                tabKeys.forEach(tabKey => {
+                    this.loadPlaylistForTab(tabKey);
+                });
+            },
+            async loadPlaylistForTab(tabKey) {
+                try {
+                    const url = this.config.tabUrls[tabKey];
+                    console.log(`📄 加载 ${tabKey} 播放列表: ${url}`);
+                    
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error(`列表请求失败：${res.status}`);
+                    const data = await res.json();
+                    
+                    if (!data || !data.contents) {
+                        console.error(`❌ ${tabKey} 播放列表数据格式错误`);
+                        throw new Error("数据格式错误");
                     }
                     
-                    this.config.isLoading = true;
-                    this.els.playlistContainer.innerHTML = '<div class="loading">加载视频列表中...</div>';
-                    try {
-                        const res = await fetch(this.config.TXT_URL_LONG);
-                        if (!res.ok) throw new Error(`列表请求失败：${res.status}`);
-                        const data = await res.json();
-                        const lines = data.contents.trim().split("\n").filter(line => line.trim());
-                        
-                        let pureUrlIdx = 0;
-                        this.config.videoList = lines.map(line => {
-                            const parts = line.split("|").map(p => p.trim());
-                            return {
-                                name: parts[0] || `未命名视频${pureUrlIdx++}`,
-                                url: parts[1] || parts[0],
-                                date: parts[2] || "未知日期",
-                                isAd: false
-                            };
-                        }).filter(item => item.url.startsWith("http"));
-                        
+                    const lines = data.contents.trim().split("\n").filter(line => line.trim());
+                    
+                    let pureUrlIdx = 0;
+                    this.config.videoLists[tabKey] = lines.map(line => {
+                        const parts = line.split("|").map(p => p.trim());
+                        return {
+                            name: parts[0] || `未命名视频${pureUrlIdx++}`,
+                            url: parts[1] || parts[0],
+                            date: parts[2] || "未知日期",
+                            isAd: false
+                        };
+                    }).filter(item => item.url && (item.url.startsWith("http") || item.url.startsWith("//")));
+                    
+                    console.log(`✅ ${tabKey} 播放列表加载成功，共 ${this.config.videoLists[tabKey].length} 个视频`);
+                    
+                    this.config.loadingStatus.loaded++;
+                    
+                    if (tabKey === this.config.currentTab) {
+                        this.config.currentVideoList = this.config.videoLists[tabKey];
                         this.config.currentPage = 1;
-                        this.els.playlistCount.textContent = `共计 ${this.config.videoList.length} 个视频`;
+                        // 修改：不设置currentPlayIndex，保持为-1
+                        this.config.currentPlayIndex = -1;
                         this.renderPlaylist();
                         this.initPaginationDisabled();
-                        this.scrollToCurrentPlay();
-                        resolve();
-                    } catch (err) {
+                    }
+                    
+                } catch (err) {
+                    console.error(`❌ ${tabKey} 播放列表加载失败:`, err.message);
+                    this.config.loadingStatus.failed++;
+                    this.config.videoLists[tabKey] = [];
+                    
+                    if (tabKey === this.config.currentTab) {
                         this.els.playlistContainer.innerHTML = `
                             <div class="error">
-                                视频列表加载失败：${err.message}
-                                <button class="retry-btn" onclick="App.loadPlaylist()">重试</button>
+                                加载失败: ${err.message}
+                                <button class="retry-btn" onclick="App.loadPlaylistForTab('${tabKey}')">重试</button>
                             </div>
                         `;
-                        reject(err);
-                    } finally {
-                        this.config.isLoading = false;
-                        this.forceRedraw();
                     }
-                });
+                } finally {
+                    this.updateLoadingProgress();
+                    
+                    if (this.config.loadingStatus.loaded + this.config.loadingStatus.failed === this.config.loadingStatus.total) {
+                        console.log("✅ 所有播放列表加载完成");
+                        console.log(`📊 加载统计: 成功 ${this.config.loadingStatus.loaded}, 失败 ${this.config.loadingStatus.failed}`);
+                        
+                        this.hideLoadingProgress();
+                        
+                        if (this.config.currentTab && this.config.videoLists[this.config.currentTab].length === 0) {
+                            this.showPlaylistError();
+                        }
+                    }
+                }
+            },
+            showLoadingProgress() {
+                this.els.playlistContainer.innerHTML = `
+                    <div class="loading-progress" id="loadingProgress">
+                        <span>正在加载播放列表...</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                        <span id="progressText">0/6</span>
+                    </div>
+                `;
+            },
+            updateLoadingProgress() {
+                const progressFill = document.getElementById('progressFill');
+                const progressText = document.getElementById('progressText');
+                
+                if (progressFill && progressText) {
+                    const total = this.config.loadingStatus.total;
+                    const loaded = this.config.loadingStatus.loaded + this.config.loadingStatus.failed;
+                    const progress = Math.floor((loaded / total) * 100);
+                    
+                    progressFill.style.width = `${progress}%`;
+                    progressText.textContent = `${loaded}/${total}`;
+                }
+            },
+            hideLoadingProgress() {
+                const loadingProgress = document.getElementById('loadingProgress');
+                if (loadingProgress) {
+                    loadingProgress.style.display = 'none';
+                }
+            },
+            showPlaylistError() {
+                this.els.playlistContainer.innerHTML = `
+                    <div class="error">
+                        视频列表加载失败
+                        <button class="retry-btn" onclick="App.loadAllPlaylists()">重新加载</button>
+                    </div>
+                `;
             },
             renderPlaylist() {
                 const start = (this.config.currentPage - 1) * this.config.PAGE_SIZE;
-                const pageItems = this.config.videoList.slice(start, start + this.config.PAGE_SIZE);
+                const pageItems = this.config.currentVideoList.slice(start, start + this.config.PAGE_SIZE);
                 this.els.playlistContainer.innerHTML = pageItems.length 
                     ? pageItems.map((item, idx) => {
                         const globalIdx = start + idx;
+                        // 修改：只有当当前播放的视频属于当前标签并且索引匹配时才高亮
+                        const isActive = this.config.currentPlayingVideo.tab === this.config.currentTab && 
+                                         this.config.currentPlayingVideo.index === globalIdx;
                         return `
-                            <div class="playlist-item ${globalIdx === this.config.currentPlayIndex ? 'item-active' : ''}" onclick="App.playVideo(${globalIdx})">
+                            <div class="playlist-item ${isActive ? 'item-active' : ''}" onclick="App.playVideo(${globalIdx})">
                                 <span class="item-index">${globalIdx+1}.</span>
                                 <span class="item-name">${item.name}</span>
                                 <span class="item-date">${item.date}</span>
@@ -1805,36 +1998,45 @@
                 this.forceRedraw();
             },
             playVideo(index) {
-                if (this.config.isInterstitialShowing || !this.config.videoList[index]) return;
+                if (this.config.isInterstitialShowing || !this.config.currentVideoList[index]) return;
                 
                 this.stopCurrentVideo();
                 this.config.isLoading = true;
                 this.config.currentPlayIndex = index;
                 
+                // 修改：记录当前播放的视频信息
+                this.config.currentPlayingVideo = {
+                    tab: this.config.currentTab,
+                    index: index,
+                    page: this.config.currentPage
+                };
+                
+                // 更新高亮状态
                 document.querySelectorAll(".playlist-item").forEach(el => el.classList.remove("item-active"));
                 const currentItemEl = document.querySelectorAll(".playlist-item")[index - (this.config.currentPage - 1) * this.config.PAGE_SIZE];
                 if (currentItemEl) currentItemEl.classList.add("item-active");
                 
-                const shouldShowPreAd = !this.config.videoList[index].isAd && this.config.adPlayCount < 3 && this.config.preAdImageSources.length > 0;
+                const shouldShowPreAd = !this.config.currentVideoList[index].isAd && this.config.adPlayCount < 3 && this.config.preAdImageSources.length > 0;
                 if (shouldShowPreAd) {
                     this.showPreAd(index, () => {
                         this.config.isLoading = false;
-                        this.scrollToCurrentPlay();
+                        // 修改：播放视频时不自动滚动
                     });
                 } else {
                     this.realPlayVideo(index);
                     this.config.isLoading = false;
-                    this.scrollToCurrentPlay();
                 }
             },
             realPlayVideo(index) {
-                const item = this.config.videoList[index];
+                const item = this.config.currentVideoList[index];
                 this.config.preAdPlaying = false;
                 
                 if (this.config.hls) {
                     this.config.hls.destroy();
                     this.config.hls = null;
                 }
+                
+                this.setupVideoFullscreen();
                 
                 const resetLoading = () => this.config.isLoading = false;
                 try {
@@ -1872,6 +2074,32 @@
                     console.error("播放初始化失败：", err);
                     resetLoading();
                 }
+            },
+            setupVideoFullscreen() {
+                this.els.player.setAttribute('x5-video-player-type', 'h5');
+                this.els.player.setAttribute('x5-video-player-fullscreen', 'true');
+                this.els.player.setAttribute('x5-video-orientation', 'landscape');
+                
+                document.addEventListener('fullscreenchange', () => {
+                    this.handleFullscreenChange();
+                });
+                document.addEventListener('webkitfullscreenchange', () => {
+                    this.handleFullscreenChange();
+                });
+                document.addEventListener('mozfullscreenchange', () => {
+                    this.handleFullscreenChange();
+                });
+                document.addEventListener('MSFullscreenChange', () => {
+                    this.handleFullscreenChange();
+                });
+            },
+            handleFullscreenChange() {
+                const isFullscreen = document.fullscreenElement || 
+                                   document.webkitFullscreenElement || 
+                                   document.mozFullScreenElement || 
+                                   document.msFullscreenElement;
+                
+                console.log("视频全屏状态变化:", isFullscreen ? "全屏" : "退出全屏");
             },
             stopCurrentVideo() {
                 if (!this.els.player.paused) this.els.player.pause();
@@ -1967,24 +2195,35 @@
                 setTimeout(() => ad.classList.add('show'), 50);
             },
             initPaginationDisabled() {
-                const maxPage = Math.ceil(this.config.videoList.length / this.config.PAGE_SIZE);
+                const maxPage = Math.ceil(this.config.currentVideoList.length / this.config.PAGE_SIZE);
                 this.els.prevPageBtn.disabled = this.config.currentPage <= 1;
                 this.els.nextPageBtn.disabled = this.config.currentPage >= maxPage;
                 this.els.pageInput.max = maxPage || 1;
             },
             bindEvents() {
-                console.log("页面加载完成，检测5+环境：", window.plus ? "已就绪" : "未就绪");
-
-                if (window.plus) {
-                    plus.key.addEventListener('backbutton', () => {
-                        console.log("返回键被点击，弹出提示");
-                        this.els.exitConfirmMask.style.display = 'flex';
-                    });
-                }
+                console.log("页面加载完成，初始化事件绑定");
                 
-                // 滚动文字关闭按钮 - 来自index.html
                 this.els.marqueeCloseBtn.onclick = () => {
                     this.hideMarquee();
+                };
+                
+                this.els.tabBtn1.onclick = () => {
+                    this.switchTab('playlist');
+                };
+                this.els.tabBtn2.onclick = () => {
+                    this.switchTab('tab2');
+                };
+                this.els.tabBtn3.onclick = () => {
+                    this.switchTab('tab3');
+                };
+                this.els.tabBtn4.onclick = () => {
+                    this.switchTab('tab4');
+                };
+                this.els.tabBtn5.onclick = () => {
+                    this.switchTab('tab5');
+                };
+                this.els.tabBtn6.onclick = () => {
+                    this.switchTab('tab6');
                 };
                 
                 this.els.noticeCloseBtn.onclick = () => {
@@ -1993,8 +2232,15 @@
                 };
                 
                 this.els.nextBtn.onclick = () => {
-                    if (this.config.isInterstitialShowing || !this.config.videoList.length) return;
-                    const nextIdx = (this.config.currentPlayIndex + 1) % this.config.videoList.length;
+                    if (this.config.isInterstitialShowing || !this.config.currentVideoList.length) return;
+                    
+                    // 如果没有正在播放的视频，从第一个开始播放
+                    if (this.config.currentPlayIndex === -1) {
+                        this.playVideo(0);
+                        return;
+                    }
+                    
+                    const nextIdx = (this.config.currentPlayIndex + 1) % this.config.currentVideoList.length;
                     this.playVideo(nextIdx);
                     const nextPage = Math.ceil((nextIdx + 1) / this.config.PAGE_SIZE);
                     if (nextPage !== this.config.currentPage) {
@@ -2013,7 +2259,7 @@
                 
                 this.els.nextPageBtn.onclick = () => {
                     if (this.config.isInterstitialShowing || this.config.isLoading) return;
-                    const maxPage = Math.ceil(this.config.videoList.length / this.config.PAGE_SIZE);
+                    const maxPage = Math.ceil(this.config.currentVideoList.length / this.config.PAGE_SIZE);
                     if (this.config.currentPage < maxPage) {
                         this.config.currentPage++;
                         this.renderPlaylist();
@@ -2024,7 +2270,7 @@
                 this.els.jumpPageBtn.onclick = () => {
                     if (this.config.isInterstitialShowing || this.config.isLoading) return;
                     const page = parseInt(this.els.pageInput.value);
-                    const maxPage = Math.ceil(this.config.videoList.length / this.config.PAGE_SIZE);
+                    const maxPage = Math.ceil(this.config.currentVideoList.length / this.config.PAGE_SIZE);
                     if (!isNaN(page) && page >= 1 && page <= maxPage) {
                         this.config.currentPage = page;
                         this.renderPlaylist();
@@ -2032,6 +2278,7 @@
                     }
                 };
                 
+                // 修改：正在播放按钮点击事件
                 this.els.currentPlayBtn.onclick = () => {
                     if (this.config.isInterstitialShowing || this.config.isLoading) return;
                     this.scrollToCurrentPlay();
@@ -2048,18 +2295,6 @@
                 this.els.pageInput.onkeydown = (e) => {
                     if (e.key === 'Enter') this.els.jumpPageBtn.click();
                 };
-                
-                this.els.exitConfirmCancel.onclick = () => {
-                    this.els.exitConfirmMask.style.display = 'none';
-                };
-                
-                this.els.exitConfirmOk.onclick = () => {
-                    if (window.plus) {
-                        plus.runtime.quit();
-                    } else {
-                        window.close();
-                    }
-                };
             },
             forceRedraw() {
                 const wrap = this.els.playlistWrap;
@@ -2069,6 +2304,7 @@
                 wrap.style.display = display;
             }
         };
+        
         document.addEventListener('DOMContentLoaded', () => {
             App.init();
         });
