@@ -1,7 +1,7 @@
 {
    "marquee": {
     "enable": true,
-    "text": "🎉官方APP已上线！几千部高清影片随意观看！网站常因拦截问题被屏蔽大部分内容，点击下载官方APP享高清流畅观影体验！ 🎉",
+    "text": "🎉官方APP已上线！几千部高清影片随意观看！网站常因拦截问题被屏蔽大部分内容，并随时有被关停风险。点击下载官方APP享高清流畅观影体验！ 🎉",
     "speed": "normal",
     "direction": "left",
     "backgroundColor": "rgba(22, 93, 255, 0.1)",
@@ -44,13 +44,13 @@
     "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
     "text": "强烈推荐"
   },
- "notice": {
+"notice": {
     "enable": true,
-    "title": "重要通知",
+    "title": "必看公告",
     "content": "官方网址 wacb.top （我爱操逼） <br>网站绝大多数资源被恶意拦截，导致卡顿、清晰度受损。<br>强烈建议下载官方app，体验超多资源超高清、超流畅的观影！<br>自己撸不如一起撸！快分享给你的好兄弟吧！！",
     "downloadButton": {
       "enable": true,
-      "text": "下载APP",
+      "text": "下载官方APP",
       "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
       "color": "#FFFFFF",
       "backgroundColor": "linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%)",
@@ -58,4 +58,5 @@
     }
   }
 }
+
 
