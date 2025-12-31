@@ -8,7 +8,7 @@
     "textColor": "#FFFFFF",
     "fontSize": "14px",
     "fontWeight": "500",
-    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
     "showCloseButton": true,
     "autoHide": false,
     "hideAfter": 10,
@@ -22,8 +22,8 @@
   ],
   "preAdSkipTime": 5,
   "bannerAds": [
-    { "imgUrl": "lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk" },
-    { "imgUrl": "lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk" }
+    { "imgUrl": "lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" },
+    { "imgUrl": "lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" }
   ],
   "sponsorAd": {
     "imgUrl": "kaiyunkaiping.jpg",
@@ -31,7 +31,7 @@
     "skipTime": 5
   },
   "interstitialAds": [
-    { "imgUrl": "cptp2.jpg", "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk" },
+    { "imgUrl": "cptp2.jpg", "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk" },
     { "imgUrl": "开元插屏.jpg", "linkUrl": "https://K3201.CC" },
     { "imgUrl": "cptp1.png", "linkUrl": "https://K3201.CC" }
   ],
@@ -41,14 +41,14 @@
   },
   "floatAd": {
     "imgUrl": "官方app.jpg",
-    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
     "text": "强烈推荐"
   },
   "notice": {
     "enable": true,
     "title": "公告",
     "content": "官方网址 wacb.top （我爱操逼） <br>网站绝大多数资源被恶意拦截，导致卡顿、清晰度受损。<br>强烈建议下载官方app，体验超多资源超高清、超流畅的观影！<br>自己撸不如一起撸！快分享给你的好兄弟吧！！",
-    "downloadUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk",
+    "downloadUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
     "style": {
       "background": "#FF6B6B",
       "color": "#FFFFFF",
@@ -59,16 +59,3 @@
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
