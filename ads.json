@@ -8,7 +8,7 @@
     "textColor": "#FFFFFF",
     "fontSize": "14px",
     "fontWeight": "500",
-    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.3.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
     "showCloseButton": true,
     "autoHide": false,
     "hideAfter": 10,
@@ -22,8 +22,8 @@
   ],
   "preAdSkipTime": 5,
   "bannerAds": [
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk" },
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.3.apk" }
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" },
+    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" }
   ],
   "sponsorAd": {
     "imgUrl": "https://gitee.com/t-bg/kk/raw/master/kaiyunkaiping.jpg",
@@ -46,7 +46,7 @@
   "notice": {
     "enable": true,
     "title": "公告",
-    "content": "本软件永久免费！未满18岁请自觉离开！<br>众人拾柴火焰高，请不要吝啬你们的分享！<br>你们的分享决定了我们能坚持多久！<br>官网：wacb.top (我爱CB)！",
+    "content": "本软件永久免费！未满18岁请自觉离开！<br>众人拾柴火焰高，请不要吝啬你们的分享！<br>你们的分享决定了我们能坚持多久！<br>官网：wacb.top (我爱操逼)！",
     "style": {
       "background": "#FF6B6B",
       "color": "#FFFFFF",
@@ -57,6 +57,7 @@
   }
 
 }
+
 
 
 
