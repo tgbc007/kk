@@ -88,7 +88,7 @@
             padding-bottom: 40px; /* 为分页容器留出空间 */
         }
         
-        /* 滚动文字公告样式 */
+        /* 滚动文字公告样式 - 修复滚动问题 */
         .marquee-container {
             width: calc(100% - 20px);
             margin: 3px auto; /* 减少上下边距为3px */
@@ -111,22 +111,35 @@
             align-items: center;
             padding: 6px 0;
             white-space: nowrap;
-            animation: marquee 20s linear infinite;
+            /* 移除固定动画时间，通过JS动态设置 */
             height: 100%;
+            /* 添加内联块显示，让内容自然展开 */
+            display: inline-block;
+            /* 添加必要的内边距 */
+            padding-left: 100%; /* 初始位置在容器右侧外面 */
         }
         
         .marquee-content:hover {
             animation-play-state: paused;
         }
         
+        /* 修改关键帧动画，让文字完全滚动出左边后再从右边开始 */
         @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            0% {
+                transform: translateX(0); /* 从右边开始 */
+            }
+            100% {
+                transform: translateX(-100%); /* 滚动到左边完全消失 */
+            }
         }
         
         @keyframes marquee-right {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%); /* 从左边开始 */
+            }
+            100% {
+                transform: translateX(100%); /* 滚动到右边完全消失 */
+            }
         }
         
         .marquee-content a {
@@ -135,7 +148,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            width: 100%;
+            width: auto;
         }
         
         .marquee-content a:hover {
@@ -262,9 +275,6 @@
         .download-btn:active {
             transform: translateY(0);
             box-shadow: 0 2px 6px rgba(255, 125, 0, 0.3);
-        }
-        .download-icon {
-            font-size: 16px;
         }
         .download-btn.small {
             padding: 8px 16px;
@@ -1185,6 +1195,15 @@
                     tab: null,    // 当前播放的视频所属的标签
                     index: -1,    // 当前播放的视频在对应标签列表中的索引
                     page: 1       // 当前播放的视频所在页码
+                },
+                // 新增：每个标签页的当前播放索引
+                tabPlayIndices: {
+                    playlist: -1,
+                    tab2: -1,
+                    tab3: -1,
+                    tab4: -1,
+                    tab5: -1,
+                    tab6: -1
                 }
             },
             els: {
@@ -1404,6 +1423,7 @@
                 
                 this.renderBottomBannerAd();
             },
+            // 修改：初始化滚动文字，修复滚动问题
             initMarquee() {
                 const marqueeConfig = this.config.marquee;
                 
@@ -1428,11 +1448,23 @@
                     content.innerHTML = marqueeHtml;
                 }
                 
-                let animationDuration;
+                // 修改：动态计算动画持续时间，基于文本长度
+                let baseDuration;
                 switch (marqueeConfig.speed) {
-                    case 'slow': animationDuration = '30s'; break;
-                    case 'fast': animationDuration = '10s'; break;
-                    default: animationDuration = '20s'; break;
+                    case 'slow': baseDuration = 40; break;
+                    case 'fast': baseDuration = 15; break;
+                    default: baseDuration = 25; break;
+                }
+                
+                // 根据文本长度调整动画持续时间
+                const textLength = marqueeConfig.text.length;
+                let animationDuration = baseDuration;
+                
+                // 如果文本较长，增加动画时间
+                if (textLength > 50) {
+                    animationDuration = baseDuration * 1.5;
+                } else if (textLength > 100) {
+                    animationDuration = baseDuration * 2;
                 }
                 
                 let animationName = 'marquee';
@@ -1440,7 +1472,8 @@
                     animationName = 'marquee-right';
                 }
                 
-                content.style.animation = `${animationName} ${animationDuration} linear infinite`;
+                // 使用动态计算的动画持续时间
+                content.style.animation = `${animationName} ${animationDuration}s linear infinite`;
                 
                 if (marqueeConfig.showCloseButton) {
                     this.els.marqueeCloseBtn.style.display = "block";
@@ -1453,6 +1486,28 @@
                         this.hideMarquee();
                     }, marqueeConfig.hideAfter * 1000);
                 }
+                
+                // 添加：强制重排以确保动画正确计算
+                setTimeout(() => {
+                    const containerWidth = container.offsetWidth;
+                    const contentWidth = content.scrollWidth;
+                    
+                    // 如果内容宽度大于容器宽度，才需要滚动
+                    if (contentWidth > containerWidth) {
+                        // 计算更精确的动画时间，确保滚动平滑
+                        const scrollDistance = contentWidth + containerWidth;
+                        const pixelsPerSecond = 50; // 每秒滚动50像素
+                        const calculatedDuration = scrollDistance / pixelsPerSecond;
+                        
+                        // 使用计算出的更精确的持续时间
+                        content.style.animationDuration = `${Math.max(calculatedDuration, baseDuration)}s`;
+                    } else {
+                        // 如果内容不长，不需要滚动，隐藏动画
+                        content.style.animation = 'none';
+                        content.style.paddingLeft = '0';
+                        content.style.textAlign = 'center';
+                    }
+                }, 100);
             },
             openMarqueeLink() {
                 const linkUrl = this.config.marquee.linkUrl;
@@ -1825,9 +1880,10 @@
                 if (!url || url === "#") return;
                 window.open(url, '_blank');
             },
+            // 修改：切换标签页时不停止当前播放的视频
             switchTab(tabName) {
-                // 停止当前播放的视频
-                this.stopCurrentVideo();
+                // 移除stopCurrentVideo调用，这样切换标签页时不会中断播放
+                // this.stopCurrentVideo();
                 
                 this.config.currentTab = tabName;
                 
@@ -1842,8 +1898,9 @@
                 
                 this.config.currentVideoList = this.config.videoLists[tabName] || [];
                 this.config.currentPage = 1;
-                // 修改：切换列表时不设置currentPlayIndex，保持为-1
-                this.config.currentPlayIndex = -1;
+                
+                // 恢复当前标签页的播放索引
+                this.config.currentPlayIndex = this.config.tabPlayIndices[tabName] || -1;
                 
                 if (this.config.currentVideoList.length > 0) {
                     this.renderPlaylist();
@@ -1905,8 +1962,8 @@
                     if (tabKey === this.config.currentTab) {
                         this.config.currentVideoList = this.config.videoLists[tabKey];
                         this.config.currentPage = 1;
-                        // 修改：不设置currentPlayIndex，保持为-1
-                        this.config.currentPlayIndex = -1;
+                        // 恢复当前标签页的播放索引
+                        this.config.currentPlayIndex = this.config.tabPlayIndices[tabKey] || -1;
                         this.renderPlaylist();
                         this.initPaginationDisabled();
                     }
@@ -2011,6 +2068,9 @@
                     page: this.config.currentPage
                 };
                 
+                // 保存当前标签页的播放索引
+                this.config.tabPlayIndices[this.config.currentTab] = index;
+                
                 // 更新高亮状态
                 document.querySelectorAll(".playlist-item").forEach(el => el.classList.remove("item-active"));
                 const currentItemEl = document.querySelectorAll(".playlist-item")[index - (this.config.currentPage - 1) * this.config.PAGE_SIZE];
@@ -2020,7 +2080,6 @@
                 if (shouldShowPreAd) {
                     this.showPreAd(index, () => {
                         this.config.isLoading = false;
-                        // 修改：播放视频时不自动滚动
                     });
                 } else {
                     this.realPlayVideo(index);
@@ -2231,22 +2290,39 @@
                     this.showInterstitial(1);
                 };
                 
+                // 修改：下一个视频按钮逻辑
                 this.els.nextBtn.onclick = () => {
-                    if (this.config.isInterstitialShowing || !this.config.currentVideoList.length) return;
+                    if (this.config.isInterstitialShowing) return;
                     
-                    // 如果没有正在播放的视频，从第一个开始播放
-                    if (this.config.currentPlayIndex === -1) {
+                    // 如果有当前播放的视频，基于它播放下一个
+                    if (this.config.currentPlayingVideo.tab && this.config.currentPlayingVideo.index !== -1) {
+                        const { tab, index } = this.config.currentPlayingVideo;
+                        const videoList = this.config.videoLists[tab] || [];
+                        
+                        if (videoList.length === 0) return;
+                        
+                        // 计算下一个视频索引
+                        const nextIdx = (index + 1) % videoList.length;
+                        
+                        // 如果下一个视频在另一个标签页，需要切换到那个标签页
+                        if (this.config.currentTab !== tab) {
+                            this.switchTab(tab);
+                        }
+                        
+                        // 播放下一个视频
+                        this.playVideo(nextIdx);
+                        
+                        // 计算并跳转到正确的页码
+                        const nextPage = Math.ceil((nextIdx + 1) / this.config.PAGE_SIZE);
+                        if (nextPage !== this.config.currentPage) {
+                            this.config.currentPage = nextPage;
+                            this.renderPlaylist();
+                            this.initPaginationDisabled();
+                        }
+                    } 
+                    // 如果没有正在播放的视频，但当前标签页有视频，播放第一个
+                    else if (this.config.currentVideoList.length > 0) {
                         this.playVideo(0);
-                        return;
-                    }
-                    
-                    const nextIdx = (this.config.currentPlayIndex + 1) % this.config.currentVideoList.length;
-                    this.playVideo(nextIdx);
-                    const nextPage = Math.ceil((nextIdx + 1) / this.config.PAGE_SIZE);
-                    if (nextPage !== this.config.currentPage) {
-                        this.config.currentPage = nextPage;
-                        this.renderPlaylist();
-                        this.initPaginationDisabled();
                     }
                 };
                 
