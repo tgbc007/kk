@@ -44,18 +44,18 @@
     "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
     "text": "强烈推荐"
   },
-  "notice": {
+ "notice": {
     "enable": true,
-    "title": "公告",
+    "title": "重要通知",
     "content": "官方网址 wacb.top （我爱操逼） <br>网站绝大多数资源被恶意拦截，导致卡顿、清晰度受损。<br>强烈建议下载官方app，体验超多资源超高清、超流畅的观影！<br>自己撸不如一起撸！快分享给你的好兄弟吧！！",
-    "downloadUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
-    "style": {
-      "background": "#FF6B6B",
+    "downloadButton": {
+      "enable": true,
+      "text": "下载APP",
+      "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
       "color": "#FFFFFF",
-      "titleFontSize": "24px",
-      "titleFontWeight": "bold",
-      "contentFontSize": "16px"
-      
+      "backgroundColor": "linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%)",
+      "size": "large"
     }
   }
 }
+
