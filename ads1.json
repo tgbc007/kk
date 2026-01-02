@@ -32,11 +32,11 @@
   },
   "interstitialAds": [
     { "imgUrl": "cptp2.jpg", "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.5.apk" },
-    { "imgUrl": "开元插屏.jpg", "linkUrl": "https://K3201.CC" },
+    { "imgUrl": "kycp.jpg", "linkUrl": "https://K3201.CC" },
     { "imgUrl": "cptp1.png", "linkUrl": "https://K3201.CC" }
   ],
   "bottomBannerAd": {
-    "imgUrl": "开元横幅.gif",
+    "imgUrl": "kyhf.gif",
     "linkUrl": "https://K3201.CC"
   },
   "floatAd": {
@@ -58,6 +58,7 @@
     }
   }
 }
+
 
 
 
