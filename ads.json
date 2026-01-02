@@ -15,31 +15,31 @@
     "repeat": true
   },
   "preAdImageSources": [
-    "https://gitee.com/t-bg/kk/raw/master/tptp.jpg"
+    "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/tptp.jpg"
   ],
   "preAdLinkUrls": [
     "https://K3201.CC"
   ],
   "preAdSkipTime": 5,
   "bannerAds": [
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" },
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" }
+    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" },
+    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" }
   ],
   "sponsorAd": {
-    "imgUrl": "https://gitee.com/t-bg/kk/raw/master/kaiyunkaiping.jpg",
+    "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/kaiyunkaiping.jpg",
     "linkUrl": "http://577kyty.vip",
     "skipTime": 5
   },
   "interstitialAds": [
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/%E5%BC%80%E5%85%83%E6%8F%92%E5%B1%8F.jpg", "linkUrl": "https://K3201.CC" },
-    { "imgUrl": "https://gitee.com/t-bg/kk/raw/master/cptp1.png", "linkUrl": "https://K3201.CC" }
+    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/kycp.jpg", "linkUrl": "https://K3201.CC" },
+    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/cptp1.png", "linkUrl": "https://K3201.CC" }
   ],
   "bottomBannerAd": {
-    "imgUrl": "https://gitee.com/t-bg/kk/raw/master/%E5%BC%80%E5%85%83%E6%A8%AA%E5%B9%85.gif",
+    "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/kyhf.gif",
     "linkUrl": "https://K3201.CC"
   },
   "floatAd": {
-    "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/%E5%BC%80%E5%85%83%E6%82%AC%E6%B5%AE.gif",
+    "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/kyxf.gif",
     "linkUrl": "https://K3201.CC",
     "text": "强烈推荐"
   },
@@ -57,6 +57,7 @@
     }
   }
 }
+
 
 
 
