@@ -8,7 +8,7 @@
     "textColor": "#FFFFFF",
     "fontSize": "14px",
     "fontWeight": "500",
-    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.5.apk",
     "showCloseButton": true,
     "autoHide": false,
     "hideAfter": 10,
@@ -22,8 +22,8 @@
   ],
   "preAdSkipTime": 5,
   "bannerAds": [
-    { "imgUrl": "lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" },
-    { "imgUrl": "lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" }
+    { "imgUrl": "lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.5.apk" },
+    { "imgUrl": "lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.5.apk" }
   ],
   "sponsorAd": {
     "imgUrl": "kaiyunkaiping.jpg",
@@ -31,7 +31,7 @@
     "skipTime": 5
   },
   "interstitialAds": [
-    { "imgUrl": "cptp2.jpg", "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk" },
+    { "imgUrl": "cptp2.jpg", "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.5.apk" },
     { "imgUrl": "开元插屏.jpg", "linkUrl": "https://K3201.CC" },
     { "imgUrl": "cptp1.png", "linkUrl": "https://K3201.CC" }
   ],
@@ -41,7 +41,7 @@
   },
   "floatAd": {
     "imgUrl": "gfxz.jpg",
-    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.5.apk",
     "text": "强烈推荐"
   },
 "notice": {
@@ -51,13 +51,14 @@
     "downloadButton": {
       "enable": true,
       "text": "下载官方APP",
-      "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
+      "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.5.apk",
       "color": "#FFFFFF",
       "backgroundColor": "linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%)",
       "size": "large"
     }
   }
 }
+
 
 
 
