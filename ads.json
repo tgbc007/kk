@@ -1,7 +1,7 @@
 {
   "marquee": {
     "enable": true,
-    "text": "🎉本站影片永久免费，持续更新，未满18岁禁止下载使用。若界面显示异常请到wacb.top下载最新版。 🎉",
+    "text": "🎉本站影片永久免费，持续更新，未满18岁禁止下载使用。若界面显示异常请到woaicb.top下载最新版。 🎉",
     "speed": "normal",
     "direction": "left",
     "backgroundColor": "rgba(22, 93, 255, 0.1)",
@@ -57,6 +57,7 @@
     }
   }
 }
+
 
 
 
