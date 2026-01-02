@@ -8,7 +8,7 @@
     "textColor": "#FFFFFF",
     "fontSize": "14px",
     "fontWeight": "500",
-    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
+    "linkUrl": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.5.apk",
     "showCloseButton": true,
     "autoHide": false,
     "hideAfter": 10,
@@ -22,8 +22,8 @@
   ],
   "preAdSkipTime": 5,
   "bannerAds": [
-    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" },
-    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.4.apk" }
+    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/lbtp1.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.5.apk" },
+    { "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/lbtp2.jpg", "linkUrl": "https://cdn.jsdelivr.net/gh/tgbc007/kk/wyw1.0.5.apk" }
   ],
   "sponsorAd": {
     "imgUrl": "https://gh-proxy.org/https://github.com/tgbc007/kk/blob/main/kaiyunkaiping.jpg",
@@ -50,20 +50,12 @@
     "downloadButton": {
       "enable": true,
       "text": "下载官方APP",
-      "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.4.apk",
+      "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tgbc007/kk/refs/heads/main/wyw1.0.5.apk",
       "color": "#FFFFFF",
       "backgroundColor": "linear-gradient(90deg, #165DFF 0%, #0E4BD8 100%)",
       "size": "large"
     }
   }
 }
-
-
-
-
-
-
-
-
 
 
